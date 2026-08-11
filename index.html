@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VidyaSetu | National AI Mentorship Initiative</title>
+    <!-- Professional Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Premium Global Top Ticker -->
+    <div class="top-ticker">
+        <div class="ticker-content">
+            <span class="ticker-item"><i class="ph-fill ph-check-circle" style="color: #4ade80;"></i> <strong>Ram</strong> just enrolled in <span class="ticker-highlight">Advanced Machine Learning</span></span>
+            <span class="ticker-item"><i class="ph-fill ph-star" style="color: #facc15;"></i> <strong>Priya</strong> left a 5-star review for <span class="ticker-highlight">Dr. Emily Chen</span></span>
+            <span class="ticker-item"><i class="ph-fill ph-video-camera" style="color: #38bdf8;"></i> <strong>Rahul</strong> booked a <span class="ticker-highlight">1-on-1 tutoring session</span></span>
+            <span class="ticker-item"><i class="ph-fill ph-certificate" style="color: #a78bfa;"></i> <strong>Ananya</strong> completed the <span class="ticker-highlight">Google Data Analytics</span> certificate</span>
+            <span class="ticker-item"><i class="ph-fill ph-lightning" style="color: #facc15;"></i> <strong>Vikram</strong> achieved a <span class="ticker-highlight">7-day study streak!</span></span>
+        </div>
+    </div>
+    <!-- Fixed Dashboard Sidebar (Premium App Style) -->
+    <aside class="fixed-sidebar hidden" id="fixed-sidebar">
+        <div class="sidebar-top">
+            <div class="logo-icon"><i class="ph-fill ph-student"></i></div>
+            <nav class="sidebar-nav-icons">
+                <a href="javascript:void(0)" class="active" title="Dashboard"><i class="ph-fill ph-squares-four"></i></a>
+                <a href="javascript:void(0)" title="Analytics"><i class="ph ph-chart-bar"></i></a>
+                <a href="javascript:void(0)" title="Learning Paths"><i class="ph ph-books"></i></a>
+                <a href="javascript:void(0)" title="Mentors"><i class="ph ph-chalkboard-teacher"></i></a>
+                <a href="javascript:void(0)" title="Community"><i class="ph ph-users"></i></a>
+            </nav>
+        </div>
+        <div class="sidebar-bottom">
+            <a href="javascript:void(0)" title="Settings"><i class="ph ph-gear"></i></a>
+            <div class="user-avatar" onclick="openProfileModal()" title="Profile & Settings" style="cursor:pointer;"><i class="ph-fill ph-user"></i></div>
+        </div>
+    </aside>
+    <nav class="navbar" id="main-nav">
+        <div class="nav-container">
+            <div class="nav-left" style="display: flex; align-items: center; gap: 2.5rem;">
+                <div class="logo">
+                    <i class="ph-fill ph-student"></i> VidyaSetu
+                </div>
+                <div class="nav-links" id="nav-public-links">
+                    <a href="javascript:void(0)" onclick="alert('Top National Educators list will be available here.')">Educators</a>
+                    <a href="javascript:void(0)" onclick="alert('Platform usage guidelines coming soon.')">Guidelines</a>
+                    <a href="javascript:void(0)" onclick="alert('NEP 2020 alignment details coming soon.')">NEP 2020</a>
+                </div>
+            </div>
+            
+            <div class="nav-actions" id="nav-public-actions">
+                <a href="javascript:void(0)" class="btn-ghost" onclick="selectRole('faculty')">Institute Login</a>
+                <a href="javascript:void(0)" class="btn-primary small" onclick="showRoleSelection()">Student Registration</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 1. Landing View -->
+    <main class="hero-section" id="hero-view">
+        <div class="hero-tech-bg"></div>
+        <div class="hero-content bawasome-hero" style="max-width: 1200px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 4rem;">
+            
+            <div class="hero-header-bawasome" style="position: relative; text-align: center; max-width: 800px;">
+                <!-- Decorative SVGs -->
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute; top:-20px; left:-20px;"><path d="M10 30 Q 20 10 30 30" stroke="#38bdf8" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
+                <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute; bottom:20px; right:-30px;"><path d="M25 5 L25 45 M5 25 L45 25 M11 11 L39 39 M11 39 L39 11" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/></svg>
+                
+                <h1 class="hero-title" style="font-size: 3.5rem; font-weight: 800; color: #0f172a; line-height: 1.1; margin-bottom: 1.5rem; position: relative;">
+                    Unlock Your Potential:<br>
+                    Where <span style="color: #0284c7;">Free Learning</span> Meets<br>
+                    Expert Guidance
+                    <div style="position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%) rotate(-3deg); background: #fde047; color: #1e293b; font-size: 0.9rem; font-weight: 700; padding: 0.25rem 1rem; border-radius: 4px; box-shadow: 2px 4px 0 rgba(0,0,0,0.1); white-space: nowrap;">NEP 2020 Aligned</div>
+                </h1>
+                
+                <div class="hero-actions" style="margin-top: 2rem;">
+                    <button class="btn-primary large glow-btn" onclick="showRoleSelection()" style="border-radius: 30px; padding: 1rem 2.5rem; font-size: 1.2rem; font-weight: 600; box-shadow: 0 10px 25px rgba(2, 132, 199, 0.4);">
+                        Start Learning Now
+                    </button>
+                </div>
+            </div>
+
+            <div class="bawasome-bento-grid" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; width: 100%; height: 400px;">
+                
+                <!-- Card 1: Abstract Background -->
+                <div class="bento-card" style="background: url('hero-abstract.jpg') center/cover no-repeat; border-radius: 24px; padding: 2rem; color: white; display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.1); transform: translateY(20px);">
+                    <div style="background: rgba(0,0,0,0.3); position:absolute; top:0; left:0; width:100%; height:100%;"></div>
+                    <div style="position:relative; z-index:1;">
+                        <h2 style="font-size: 3rem; font-weight: 800; margin: 0; line-height: 1;">10,000+</h2>
+                        <p style="font-size: 1.2rem; margin: 0 0 2rem 0; font-weight: 500;">Free Courses</p>
+                        <p style="font-size: 0.9rem; opacity: 0.9; margin: 0;">Curated content from top institutions, accessible to everyone.</p>
+                    </div>
+                </div>
+
+                <!-- Card 2: Student -->
+                <div class="bento-card" style="background: #22d3ee url('hero-student.jpg') center/cover no-repeat; border-radius: 24px; position: relative; overflow: hidden; box-shadow: 0 20px 40px rgba(34, 211, 238, 0.3); transform: scale(1.05); z-index: 2;">
+                    <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background: white; padding: 0.75rem 1.25rem; border-radius: 16px; display: flex; align-items: center; gap: 1rem; width: 85%; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+                        <div style="display: flex; margin-right: 0.5rem;">
+                            <img src="https://i.pravatar.cc/100?img=11" style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid white; margin-right: -10px;">
+                            <img src="https://i.pravatar.cc/100?img=32" style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid white;">
+                        </div>
+                        <div>
+                            <div style="font-weight: 800; color: #0f172a; font-size: 1.1rem; line-height: 1.2;">1 Lakh+</div>
+                            <div style="font-size: 0.75rem; color: #64748b; font-weight: 500;">Students Enrolled</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Split Stack -->
+                <div class="bento-card-stack" style="display: flex; flex-direction: column; gap: 1.5rem; transform: translateY(20px);">
+                    <div class="bento-card" style="background: #007aff; border-radius: 24px; padding: 2rem; color: white; flex: 1; box-shadow: 0 20px 40px rgba(0, 122, 255, 0.2); display: flex; flex-direction: column; justify-content: center;">
+                        <h3 style="font-size: 1.8rem; font-weight: 700; margin: 0 0 1.5rem 0; line-height: 1.2;">Guidance<br>From The Best</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; width: fit-content;">
+                            <img src="https://i.pravatar.cc/100?img=68" style="width: 45px; height: 45px; border-radius: 12px; background: rgba(255,255,255,0.2);">
+                            <img src="https://i.pravatar.cc/100?img=47" style="width: 45px; height: 45px; border-radius: 12px; background: rgba(255,255,255,0.2);">
+                            <img src="https://i.pravatar.cc/100?img=59" style="width: 45px; height: 45px; border-radius: 12px; background: rgba(255,255,255,0.2);">
+                            <img src="https://i.pravatar.cc/100?img=12" style="width: 45px; height: 45px; border-radius: 12px; background: rgba(255,255,255,0.2);">
+                        </div>
+                    </div>
+                    <div class="bento-card" style="background: #fde047; border-radius: 24px; padding: 1.5rem; color: #0f172a; height: 120px; box-shadow: 0 15px 30px rgba(253, 224, 71, 0.2); display: flex; flex-direction: column; justify-content: center;">
+                        <h3 style="font-size: 1.8rem; font-weight: 800; margin: 0;">1,000+</h3>
+                        <p style="margin: 0; font-weight: 600; font-size: 0.9rem;">Verified Experts</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- 1.5. Animated Role Selection -->
+    <main class="role-selection-section hidden" id="role-selection-view">
+        <div class="role-selection-header">
+            <h2 class="role-title">Select Your Path</h2>
+            <p class="role-subtitle">Join the National AI Mentorship Portal to empower India's future.</p>
+        </div>
+        <div class="role-cards-container">
+            <!-- Student Card -->
+            <div class="role-card" onclick="selectRole('student')" style="--animation-order: 1;">
+                <div class="role-card-glow"></div>
+                <div class="role-icon-wrapper">
+                    <i class="ph-fill ph-student role-icon"></i>
+                </div>
+                <h3>Join as a Student</h3>
+                <p>Access personalized AI mentorship, curated study modules, and connect with top-tier national educators.</p>
+                <div class="role-action">
+                    <span>Begin Assessment</span> <i class="ph ph-arrow-right"></i>
+                </div>
+            </div>
+
+            <!-- Faculty Card -->
+            <div class="role-card" onclick="selectRole('faculty')" style="--animation-order: 2;">
+                <div class="role-card-glow"></div>
+                <div class="role-icon-wrapper">
+                    <i class="ph-fill ph-chalkboard-teacher role-icon"></i>
+                </div>
+                <h3>Join as a Faculty</h3>
+                <p>Register as a certified educator, host office hours, and guide students based on their cognitive profiles.</p>
+                <div class="role-action">
+                    <span>Faculty Portal</span> <i class="ph ph-arrow-right"></i>
+                </div>
+            </div>
+        </div>
+        <button class="btn-ghost mt-4" onclick="cancelRoleSelection()">
+            <i class="ph ph-arrow-left"></i> Return Home
+        </button>
+    </main>
+
+    <!-- 2. Full-Screen Behavioral Wizard -->
+    <main class="wizard-container hidden" id="wizard-view">
+        <div class="wizard-header">
+            <div class="logo"><i class="ph-fill ph-student"></i> VidyaSetu</div>
+            <button class="btn-ghost" onclick="cancelWizard()">Cancel Assessment</button>
+        </div>
+        
+        <div class="wizard-content">
+        <div class="wizard-content" id="student-wizard-content" style="display: none;">
+            
+            <div class="security-badge mb-4" style="text-align: center; color: #10b981; font-weight: 600; font-size: 0.9rem; padding: 0.5rem; background: #ecfdf5; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; width: 100%; gap: 0.5rem; margin-bottom: 2rem;">
+                <i class="ph-fill ph-shield-check"></i> Govt. Approved Secure Portal - Data Encrypted
+            </div>
+
+            <!-- Student Step 1: Identity -->
+            <div class="wizard-step" id="step-s1">
+                <span class="step-indicator">Student Profiling: Section 1 of 8</span>
+                <h2>Enter your basic identity details:</h2>
+                <div class="form-grid mt-4">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="student-name" class="modern-input" placeholder="e.g. Rahul Sharma" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Date of Birth</label>
+                        <input type="date" id="student-dob" class="modern-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="student-email" class="modern-input" placeholder="e.g. rahul@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mobile Number</label>
+                        <div class="modern-input" style="display: flex; align-items: center; padding: 0; overflow: hidden;">
+                            <span style="color: var(--text-secondary); font-weight: 600; padding: 1rem 0.5rem 1rem 1.25rem; font-size: 1rem; border-right: 2px solid var(--border-color); background: #f1f5f9;">+91</span>
+                            <input type="tel" id="student-mobile" placeholder="10-digit mobile number" pattern="[0-9]{10}" maxlength="10" required style="border: none; background: transparent; padding: 1rem; flex: 1; outline: none; font-size: 1rem; color: var(--text-primary); font-family: inherit;">
+                        </div>
+                    </div>
+                </div>
+                <div class="error-msg hidden" id="error-s1" style="color: #ef4444; margin-top: 1rem; font-size: 0.9rem;">Please fill out all mandatory fields.</div>
+                <button class="btn-primary large mt-4" onclick="nextStudentStep(1)">Continue <i class="ph ph-arrow-right"></i></button>
+            </div>
+
+            <!-- Student Step 2: Location -->
+            <div class="wizard-step hidden" id="step-s2">
+                <span class="step-indicator">Student Profiling: Section 2 of 8</span>
+                <h2>Institution & Location Details:</h2>
+                <div class="form-grid mt-4">
+                    <div class="form-group">
+                        <label>State / Union Territory</label>
+                        <select id="student-state" class="modern-select" required onchange="populateCities()">
+                            <option value="" disabled selected>Select State...</option>
+                            <!-- Populated via JS -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>City / District</label>
+                        <select id="student-city" class="modern-select" required>
+                            <option value="" disabled selected>Select City...</option>
+                            <!-- Populated via JS -->
+                        </select>
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>School / College Name</label>
+                        <select id="student-school" class="modern-select" required onchange="toggleCustomSchool()">
+                            <option value="" disabled selected>Select Institution...</option>
+                            <!-- Populated via JS -->
+                        </select>
+                        <input type="text" id="student-school-custom" class="modern-input hidden mt-4" placeholder="Type your institution name here...">
+                    </div>
+                </div>
+                <div class="error-msg hidden" id="error-s2" style="color: #ef4444; margin-top: 1rem; font-size: 0.9rem;">Please fill out all mandatory fields.</div>
+                <button class="btn-primary large mt-4" onclick="nextStudentStep(2)">Continue <i class="ph ph-arrow-right"></i></button>
+            </div>
+
+            <!-- Student Step 3: Academic Level -->
+            <div class="wizard-step hidden" id="step-s3">
+                <span class="step-indicator">Student Profiling: Section 3 of 8</span>
+                <h2>Select your current academic level:</h2>
+                <div class="form-grid mt-4">
+                    <div class="form-group">
+                        <label>Academic Level</label>
+                        <select id="student-level" class="modern-select" required>
+                            <option value="" disabled selected>Select Level...</option>
+                            <option value="Class 9-10">Secondary (Class 9-10)</option>
+                            <option value="Class 11-12">Higher Secondary (Class 11-12)</option>
+                            <option value="Undergraduate">Undergraduate (B.Tech, B.Sc, B.A)</option>
+                            <option value="Postgraduate">Postgraduate</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Demographic Region</label>
+                        <select id="student-region" class="modern-select" required>
+                            <option value="" disabled selected>Select Region...</option>
+                            <option value="Urban">Urban / Metro</option>
+                            <option value="Rural">Rural / Village</option>
+                            <option value="Tribal">Tribal / Remote Area</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="error-msg hidden" id="error-s3" style="color: #ef4444; margin-top: 1rem; font-size: 0.9rem;">Please fill out all mandatory fields.</div>
+                <button class="btn-primary large mt-4" onclick="nextStudentStep(3)">Continue <i class="ph ph-arrow-right"></i></button>
+            </div>
+
+            <!-- Student Step 4: Academic Record -->
+            <div class="wizard-step hidden" id="step-s4">
+                <span class="step-indicator">Student Profiling: Section 4 of 8</span>
+                <h2>Enter your previous academic scores:</h2>
+                <div class="form-grid mt-4">
+                    <div class="form-group" id="container-10th">
+                        <label>Class 10 Percentage / CGPA</label>
+                        <select id="student-10th" class="modern-select">
+                            <option value="" disabled selected>Select Score Range...</option>
+                            <option value="90% - 100%">90% - 100%</option>
+                            <option value="80% - 90%">80% - 90%</option>
+                            <option value="60% - 80%">60% - 80%</option>
+                            <option value="40% - 60%">40% - 60%</option>
+                            <option value="< 40%">&lt; 40%</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="container-12th">
+                        <label>Class 12 Percentage</label>
+                        <select id="student-12th" class="modern-select">
+                            <option value="" disabled selected>Select Score Range...</option>
+                            <option value="90% - 100%">90% - 100%</option>
+                            <option value="80% - 90%">80% - 90%</option>
+                            <option value="60% - 80%">60% - 80%</option>
+                            <option value="40% - 60%">40% - 60%</option>
+                            <option value="< 40%">&lt; 40%</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="container-last-year">
+                        <label id="label-last-year">Last Year Score (%)</label>
+                        <select id="student-last-year" class="modern-select">
+                            <option value="" disabled selected>Select Score Range...</option>
+                            <option value="90% - 100%">90% - 100%</option>
+                            <option value="80% - 90%">80% - 90%</option>
+                            <option value="60% - 80%">60% - 80%</option>
+                            <option value="40% - 60%">40% - 60%</option>
+                            <option value="< 40%">&lt; 40%</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="error-msg hidden" id="error-s4" style="color: #ef4444; margin-top: 1rem; font-size: 0.9rem;">Please fill out all applicable score fields.</div>
+                <button class="btn-primary large mt-4" onclick="nextStudentStep(4)">Continue <i class="ph ph-arrow-right"></i></button>
+            </div>
+
+            <!-- Student Step 5: Inclusivity & Access -->
+            <div class="wizard-step hidden" id="step-s5">
+                <span class="step-indicator">Student Profiling: Section 5 of 8</span>
+                <h2>Digital Access & Needs (NEP 2020):</h2>
+                <div class="form-grid mt-4">
+                    <div class="form-group">
+                        <label>Primary Learning Device</label>
+                        <select id="student-device" class="modern-select" required>
+                            <option value="" disabled selected>Select Device...</option>
+                            <option value="Shared Smartphone">Shared Smartphone</option>
+                            <option value="Personal Smartphone">Personal Smartphone</option>
+                            <option value="Laptop/PC">Laptop / PC</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Internet Connectivity</label>
+                        <select id="student-net" class="modern-select" required>
+                            <option value="" disabled selected>Select Connectivity...</option>
+                            <option value="Broadband">High-speed Broadband</option>
+                            <option value="4G Mobile Data">4G Mobile Data</option>
+                            <option value="Unstable/Offline">Unstable / Require Offline Mode</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Special Learning Needs (Divyangjan)</label>
+                        <select id="student-needs" class="modern-select" required>
+                            <option value="" disabled selected>Select Need...</option>
+                            <option value="None">None</option>
+                            <option value="Visually Impaired">Visually Impaired (Screen Reader Needed)</option>
+                            <option value="Hearing Impaired">Hearing Impaired (Captions/Sign Language)</option>
+                            <option value="Neurodivergent">Neurodivergent (Dyslexia, ADHD etc.)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="error-msg hidden" id="error-s5" style="color: #ef4444; margin-top: 1rem; font-size: 0.9rem;">Please select all digital access options.</div>
+                <button class="btn-primary large mt-4" onclick="nextStudentStep(5)">Continue <i class="ph ph-arrow-right"></i></button>
+            </div>
+
+            <!-- Student Step 6: Exams -->
+            <div class="wizard-step hidden" id="step-s6">
+                <span class="step-indicator">Student Profiling: Section 6 of 8</span>
+                <h2>Primary Competitive Exam Focus:</h2>
+                <div class="options-list grid-2 mt-4">
+                    <div class="list-item" onclick="setStudentExam('JEE')"><h4>JEE (Mains/Advanced)</h4></div>
+                    <div class="list-item" onclick="setStudentExam('NEET')"><h4>NEET (UG)</h4></div>
+                    <div class="list-item" onclick="setStudentExam('CUET')"><h4>CUET</h4></div>
+                    <div class="list-item" onclick="setStudentExam('UPSC/State PSC')"><h4>UPSC / State PSC</h4></div>
+                    <div class="list-item" onclick="setStudentExam('GATE')"><h4>GATE</h4></div>
+                    <div class="list-item" onclick="setStudentExam('Board Exams Only')"><h4>Board Exams Only</h4></div>
+                </div>
+            </div>
+
+            <!-- Student Step 7: Interests -->
+            <div class="wizard-step hidden" id="step-s7">
+                <span class="step-indicator">Student Profiling: Section 7 of 8</span>
+                <h2>Select your core field of interest:</h2>
+                <div class="form-group mt-4">
+                    <select id="student-interest" class="modern-select" required>
+                        <option value="" disabled selected>Select Interest...</option>
+                        <option value="Computer Science & AI">Computer Science & AI</option>
+                        <option value="Medical & Healthcare">Medical & Healthcare</option>
+                        <option value="Pure Sciences">Pure Sciences</option>
+                        <option value="Commerce & Finance">Commerce & Finance</option>
+                        <option value="Humanities & Arts">Humanities & Arts</option>
+                    </select>
+                </div>
+                <div class="error-msg hidden" id="error-s7" style="color: #ef4444; margin-top: 1rem; font-size: 0.9rem;">Please select your core interest.</div>
+                <button class="btn-primary large mt-4" onclick="nextStudentStep(7)">Continue <i class="ph ph-arrow-right"></i></button>
+            </div>
+
+            <!-- Student Step 8: Language -->
+            <div class="wizard-step hidden" id="step-s8">
+                <span class="step-indicator">Student Profiling: Section 8 of 8</span>
+                <h2>Preferred medium of instruction:</h2>
+                <div class="options-list mt-4">
+                    <div class="list-item" onclick="finishStudentWizard('English')">
+                        <div class="item-icon"><i class="ph ph-translate"></i></div>
+                        <div class="item-text">
+                            <h4>English</h4>
+                            <p>Global technical vocabulary and standard academic terminology.</p>
+                        </div>
+                    </div>
+                    <div class="list-item" onclick="finishStudentWizard('Hindi')">
+                        <div class="item-icon"><i class="ph ph-globe-hemisphere-east"></i></div>
+                        <div class="item-text">
+                            <h4>Hindi / Regional Bilingual</h4>
+                            <p>Concepts explained in a localized, accessible linguistic context.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="wizard-content" id="faculty-wizard-content" style="display: none;">
+            <!-- Faculty Step 1: Credentials -->
+            <div class="wizard-step" id="step-f1">
+                <span class="step-indicator">Educator Certification: Section 1 of 4</span>
+                <h2>Highest Academic Credential:</h2>
+                <div class="options-list mt-4">
+                    <div class="list-item" onclick="nextFacultyStep(1, 'Ph.D')"><h4>Ph.D / Doctorate</h4></div>
+                    <div class="list-item" onclick="nextFacultyStep(1, 'Masters')"><h4>Masters (M.Tech, M.Sc, M.A)</h4></div>
+                    <div class="list-item" onclick="nextFacultyStep(1, 'Bachelors')"><h4>Bachelors (B.Tech, B.Ed, B.Sc)</h4></div>
+                </div>
+            </div>
+
+            <!-- Faculty Step 2: Subject -->
+            <div class="wizard-step hidden" id="step-f2">
+                <span class="step-indicator">Educator Certification: Section 2 of 4</span>
+                <h2>Core Subject Expertise:</h2>
+                <div class="form-group mt-4">
+                    <select id="faculty-subject" class="modern-select">
+                        <option value="" disabled selected>Select Primary Subject...</option>
+                        <option value="Mathematics">Mathematics</option>
+                        <option value="Physics">Physics</option>
+                        <option value="Chemistry">Chemistry</option>
+                        <option value="Biology/Zoology">Biology/Zoology</option>
+                        <option value="Computer Science">Computer Science / IT</option>
+                    </select>
+                </div>
+                <button class="btn-primary large mt-4" onclick="nextFacultyStep(2)">Continue <i class="ph ph-arrow-right"></i></button>
+            </div>
+
+            <!-- Faculty Step 3: Experience -->
+            <div class="wizard-step hidden" id="step-f3">
+                <span class="step-indicator">Educator Certification: Section 3 of 4</span>
+                <h2>Teaching Experience details:</h2>
+                <div class="form-grid mt-4">
+                    <div class="form-group">
+                        <label>Years of Experience</label>
+                        <input type="number" id="faculty-yoe" class="modern-input" placeholder="e.g. 5" min="0" max="50">
+                    </div>
+                    <div class="form-group">
+                        <label>Current/Previous Institution Type</label>
+                        <select id="faculty-inst" class="modern-select">
+                            <option value="IIT/NIT/IIIT">IIT / NIT / IIIT</option>
+                            <option value="Central University">Central University</option>
+                            <option value="State University/College">State University / College</option>
+                            <option value="KVS/NVS/Public School">KVS / NVS / Public School</option>
+                            <option value="Private Institution">Private Institution</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn-primary large mt-4" onclick="nextFacultyStep(3)">Continue <i class="ph ph-arrow-right"></i></button>
+            </div>
+
+            <!-- Faculty Step 4: Pedagogy -->
+            <div class="wizard-step hidden" id="step-f4">
+                <span class="step-indicator">Educator Certification: Section 4 of 4</span>
+                <h2>Primary Pedagogical Style:</h2>
+                <div class="options-list mt-4">
+                    <div class="list-item" onclick="finishFacultyWizard('Theory & Fundamentals')">
+                        <h4>Theory & Fundamentals</h4>
+                        <p>Deep focus on theoretical concepts and structural understanding.</p>
+                    </div>
+                    <div class="list-item" onclick="finishFacultyWizard('Exam-Oriented Problem Solving')">
+                        <h4>Exam-Oriented Problem Solving</h4>
+                        <p>High-paced MCQ practice and competitive exam strategies.</p>
+                    </div>
+                    <div class="list-item" onclick="finishFacultyWizard('Applied / Practical')">
+                        <h4>Applied / Practical</h4>
+                        <p>Project-based learning focusing on real-world applications.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="wizard-content">
+            <!-- Loading State -->
+            <div class="wizard-step hidden loading-state" id="step-loading">
+                <div class="ai-spinner">
+                    <div class="spinner-ring"></div>
+                    <i class="ph-fill ph-cpu ai-icon"></i>
+                </div>
+                <h2 id="loading-title">Generating Digital Profile...</h2>
+                <p class="loading-text" id="loading-subtitle">Syncing with VidyaSetu national database standards.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- 2.5 AI Cognitive Quiz Arena -->
+    <main class="quiz-section hidden" id="quiz-view">
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <span class="step-indicator" id="quiz-progress-text">Cognitive Assessment: 1 of 10</span>
+                <!-- Score purposefully hidden to reduce testing anxiety -->
+            </div>
+            
+            <div class="quiz-progress-bar">
+                <div class="quiz-progress-fill" id="quiz-progress-fill" style="width: 10%;"></div>
+            </div>
+            
+            <div class="quiz-card" id="quiz-card">
+                <h2 id="quiz-question-text" class="quiz-question">Loading question...</h2>
+                <div class="quiz-options mt-4" id="quiz-options-container">
+                    <!-- Options injected here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 3. Personalized Profile Reveal -->
+    <main class="profile-reveal-section hidden" id="profile-reveal-view">
+        <div class="premium-dashboard-container">
+            <div class="dashboard-header-glow"></div>
+            <div class="pre-title techy-text" id="reveal-pre-title">Assessment Complete</div>
+            <h2 class="reveal-title techy-title" id="reveal-title">Student Academic Profile</h2>
+            
+            <div class="premium-dashboard-grid">
+                <!-- Header / Archetype Widget -->
+                <div class="glass-widget widget-header">
+                    <div class="archetype-icon" id="reveal-icon-container"><i class="ph-fill ph-brain" id="reveal-icon"></i></div>
+                    <div class="archetype-info">
+                        <span class="label" id="reveal-label">Primary Learning Archetype</span>
+                        <h3 id="generated-archetype">The Applied Innovator</h3>
+                        <div class="ai-confidence mt-2">
+                            <i class="ph-fill ph-shield-check" style="color: #4ade80;"></i> <span id="reveal-confidence">System Confidence Rating: 98.4%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Identity Widget -->
+                <div class="glass-widget widget-identity">
+                    <h4><i class="ph ph-identification-card"></i> Identity & Contact</h4>
+                    <div class="widget-content">
+                        <p class="data-row"><span>Name:</span> <strong id="dash-name">--</strong></p>
+                        <p class="data-row"><span>DOB:</span> <strong id="dash-dob">--</strong></p>
+                        <p class="data-row"><span>Mobile:</span> <strong id="dash-mobile">--</strong></p>
+                        <p class="data-row"><span>Email:</span> <strong id="dash-email" style="font-size: 0.85rem; word-break: break-all;">--</strong></p>
+                    </div>
+                </div>
+
+                <!-- Cognitive Aptitude Ring -->
+                <div class="glass-widget widget-cognitive">
+                    <h4><i class="ph ph-lightning"></i> Cognitive Aptitude</h4>
+                    <div class="score-ring">
+                        <svg viewBox="0 0 36 36" class="circular-chart">
+                            <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                            <path class="circle" id="dash-score-ring" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                        </svg>
+                        <div class="score-text">
+                            <span id="dash-score-val">0</span><span class="max-score">/10</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Location & Academic Standing -->
+                <div class="glass-widget widget-academic">
+                    <h4><i class="ph ph-graduation-cap"></i> Location & Academics</h4>
+                    <div class="widget-content">
+                        <p class="data-row"><span>Institution:</span> <strong id="dash-school" style="font-size: 0.85rem;">--</strong></p>
+                        <p class="data-row"><span>Location:</span> <strong id="dash-location">--</strong></p>
+                        <p class="data-row"><span>Domain:</span> <strong id="dash-domain">--</strong></p>
+                        <p class="data-row"><span>Standing:</span> <strong id="dash-standing">--</strong></p>
+                        <div class="tags-container mt-2" id="dash-tags">
+                            <!-- Tags injected here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Competency Breakdown -->
+                <div class="glass-widget widget-competency">
+                    <h4><i class="ph ph-chart-bar"></i> Competency Breakdown <i class="ph ph-info" style="margin-left:auto; font-size:1rem; color:#64748b; cursor:help;" title="Based on cognitive assessment"></i></h4>
+                    
+                    <div class="chart-row">
+                        <div class="chart-label-row"><span>Logical Reasoning</span> <span id="score-logic-txt">--%</span></div>
+                        <div class="progress-bar-bg"><div class="progress-fill" id="score-logic-bar"></div></div>
+                    </div>
+                    <div class="chart-row">
+                        <div class="chart-label-row"><span>Verbal Ability</span> <span id="score-verbal-txt">--%</span></div>
+                        <div class="progress-bar-bg"><div class="progress-fill" id="score-verbal-bar"></div></div>
+                    </div>
+                    <div class="chart-row">
+                        <div class="chart-label-row"><span>Technical Skills</span> <span id="score-tech-txt">--%</span></div>
+                        <div class="progress-bar-bg"><div class="progress-fill" id="score-tech-bar"></div></div>
+                    </div>
+                    <div class="chart-row">
+                        <div class="chart-label-row"><span>Problem Solving</span> <span id="score-problem-txt">--%</span></div>
+                        <div class="progress-bar-bg"><div class="progress-fill" id="score-problem-bar"></div></div>
+                    </div>
+                </div>
+
+                <!-- Achievements -->
+                <div class="glass-widget widget-achievements">
+                    <h4><i class="ph ph-medal"></i> Achievements <i class="ph ph-info" style="margin-left:auto; font-size:1rem; color:#64748b; cursor:help;"></i></h4>
+                    
+                    <div class="achievement-item">
+                        <div class="ach-icon unlocked"><i class="ph-fill ph-rocket-launch"></i></div>
+                        <div class="ach-details">
+                            <h5>Fast Learner</h5>
+                            <div class="ach-progress">
+                                <div class="progress-bar-bg"><div class="progress-fill fill-high" style="width: 100%;"></div></div>
+                                <span>Completed</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="achievement-item">
+                        <div class="ach-icon unlocked"><i class="ph-fill ph-brain"></i></div>
+                        <div class="ach-details">
+                            <h5>Cognitive Master</h5>
+                            <div class="ach-progress">
+                                <div class="progress-bar-bg"><div class="progress-fill fill-high" style="width: 100%;"></div></div>
+                                <span>Completed</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="achievement-item">
+                        <div class="ach-icon locked"><i class="ph-fill ph-users"></i></div>
+                        <div class="ach-details">
+                            <h5>Peer Mentor</h5>
+                            <div class="ach-progress">
+                                <div class="progress-bar-bg"><div class="progress-fill fill-med" style="width: 30%;"></div></div>
+                                <span>1/3 Sessions</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-primary large mt-4 btn-techy" id="reveal-action-btn" onclick="saveProfile()">
+                Save & Authenticate Profile <i class="ph ph-lock-key"></i>
+            </button>
+        </div>
+    </main>
+
+    <!-- 4. Smart AI Search Dashboard -->
+    <main class="dashboard-section hidden" id="dashboard-view">
+        <div class="dashboard-header" style="display: none;">
+            <div>
+                <h2>Academic Dashboard</h2>
+                <p class="subtitle">Active Student Profile: <span class="text-gradient" id="dashboard-archetype">The Applied Innovator</span></p>
+            </div>
+            <button class="btn-secondary" onclick="resetApp()"><i class="ph ph-arrow-counter-clockwise"></i> Retake Assessment</button>
+        </div>
+
+        <div class="dashboard-hero-wrapper" style="background: #ffffff; width: 100%; margin: 0; padding: 4rem 0 0 0; position: relative;">
+            
+            <div class="smart-search-container" style="display: flex; align-items: center; justify-content: center; gap: 4rem; max-width: 1200px; margin: 0 auto; padding: 0 2rem 2rem 2rem;">
+                
+                <!-- Left Side: Illustration -->
+                <div style="flex: 0 0 400px;">
+                    <img src="dash-illustration.jpg" alt="Student Illustration" style="width: 100%; object-fit: contain;">
+                </div>
+
+                <!-- Right Side: Search & Tags -->
+                <div style="flex: 1;">
+                    <h1 style="font-size: 3.5rem; font-weight: 800; color: #0f172a; margin: 0 0 0.5rem 0; letter-spacing: -1px; line-height: 1.1;">Master the concept. <br><span style="color: #2563eb;">Connect with Mentors.</span></h1>
+                    <p style="font-size: 1.2rem; color: #475569; margin: 0 0 2rem 0; line-height: 1.5; font-weight: 400;">Dive into world-class study materials. Stuck on a topic? Instantly match with top-rated tutors for personalized 1-on-1 guidance.</p>
+                    
+                    <div style="position: relative; width: 100%; max-width: 650px; margin-bottom: 2rem; display: flex; flex-direction: column;">
+                        <div style="position: relative; width: 100%;">
+                            <i class="ph-bold ph-magnifying-glass" style="position: absolute; left: 1.25rem; top: 50%; transform: translateY(-50%); font-size: 1.25rem; color: #9aa0a6;"></i>
+                            <input type="text" id="search-input" class="google-search-bar" placeholder="Search for courses, topics, or expert tutors..." onkeypress="handleSearch(event)">
+                            <button class="google-search-btn" onclick="executeSearch()">Search</button>
+                        </div>
+                    </div>
+
+                    <h3 style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; color: #64748b; margin: 0 0 1rem 0;">Popular Topics</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; max-width: 650px;">
+                        <button class="premium-topic-chip" onclick="setSearch('Data Structures')">
+                            <i class="ph-fill ph-tree-structure" style="color: #6366f1;"></i> Data Structures
+                        </button>
+                        <button class="premium-topic-chip" onclick="setSearch('Machine Learning')">
+                            <i class="ph-fill ph-robot" style="color: #ec4899;"></i> Machine Learning
+                        </button>
+                        <button class="premium-topic-chip" onclick="setSearch('System Design')">
+                            <i class="ph-fill ph-hard-drives" style="color: #14b8a6;"></i> System Design
+                        </button>
+                        <button class="premium-topic-chip" onclick="setSearch('Full-Stack React')">
+                            <i class="ph-fill ph-atom" style="color: #0ea5e9;"></i> Full-Stack React
+                        </button>
+                        <button class="premium-topic-chip" onclick="setSearch('IELTS Prep')">
+                            <i class="ph-fill ph-translate" style="color: #f59e0b;"></i> IELTS Prep
+                        </button>
+                        <button class="premium-topic-chip" onclick="setSearch('UI/UX Design')">
+                            <i class="ph-fill ph-pen-nib" style="color: #8b5cf6;"></i> UI/UX Design
+                        </button>
+                        <button class="premium-topic-chip" onclick="setSearch('Business Analytics')">
+                            <i class="ph-fill ph-chart-pie" style="color: #10b981;"></i> Business Analytics
+                        </button>
+                        <button class="premium-topic-chip" onclick="setSearch('Cloud Architecture')">
+                            <i class="ph-fill ph-cloud-network" style="color: #38bdf8;"></i> Cloud Architecture
+                        </button>
+                        <button class="premium-topic-chip" onclick="setSearch('Digital Marketing')">
+                            <i class="ph-fill ph-megaphone" style="color: #f43f5e;"></i> Digital Marketing
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Search Loading State -->
+        <div class="search-loading hidden" id="search-loading">
+            <div class="ai-spinner small-spinner">
+                <div class="spinner-ring"></div>
+            </div>
+            <p style="color: var(--text-secondary); font-weight: 500;">Aggregating certified educational resources...</p>
+        </div>
+
+        <!-- Dynamic Results Section -->
+        <div class="search-results hidden" id="search-results">
+            <h3 class="results-section-title"><i class="ph-fill ph-video-camera"></i> Curated Lecture Modules <span class="badge-tag">Profile Matched</span></h3>
+            <div class="tutorial-grid" id="tutorial-grid">
+                <!-- Injected via JS -->
+            </div>
+
+            <h3 class="results-section-title mt-4"><i class="ph-fill ph-chalkboard-teacher"></i> Certified Faculty Roster <span class="badge-tag">Subject Experts</span></h3>
+            <div class="mentor-grid" id="mentor-grid">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+    </main>
+
+    <!-- 5. Immersive Learning Environment -->
+    <main class="learning-section hidden" id="learning-view">
+        <div class="learning-header">
+            <button class="btn-secondary" onclick="backToDashboard()"><i class="ph ph-arrow-left"></i> Return to Modules</button>
+            <h2 id="learning-topic-title" class="learning-title">Module Title</h2>
+            <div style="width: 160px;"></div> <!-- Spacer for flex alignment -->
+        </div>
+
+        <div class="learning-content-wrapper">
+            <!-- Left Column: Video & Interactive Hub -->
+            <div class="learning-main">
+                <!-- Video Player -->
+                <div class="video-container-wrapper">
+                    <div id="learning-video-container" class="video-responsive">
+                        <!-- Iframe injected via JS -->
+                    </div>
+                </div>
+
+                <!-- Interactive Hub -->
+                <div class="interactive-hub mt-4">
+                    <div class="hub-tabs">
+                        <button class="tab-btn active" onclick="switchTab('tab-notes')"><i class="ph ph-notebook"></i> Academic Notes</button>
+                        <button class="tab-btn" onclick="switchTab('tab-doubt')"><i class="ph ph-robot"></i> AI Tutor Assistant</button>
+                        <button class="tab-btn" onclick="switchTab('tab-flashcards')"><i class="ph ph-cards"></i> Review Cards</button>
+                        <button class="tab-btn" onclick="switchTab('tab-quiz')"><i class="ph ph-exam"></i> Evaluation Quiz</button>
+                    </div>
+
+                    <div class="hub-content" style="position: relative;">
+                        <!-- AI Generating Overlay -->
+                        <div id="ai-hub-loader" class="hidden" style="position: absolute; inset: 0; background: rgba(255, 255, 255, 0.95); z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <div class="ai-spinner small-spinner">
+                                <div class="spinner-ring"></div>
+                            </div>
+                            <p style="color: var(--accent-primary); font-weight: 600; margin-top: 1rem;"><i class="ph-fill ph-cpu"></i> Synthesizing lecture materials...</p>
+                        </div>
+
+                        <!-- Notes Tab -->
+                        <div id="tab-notes" class="tab-pane active">
+                            <div class="ai-summary-panel">
+                                <h4 style="color: var(--accent-primary); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; font-weight: 700;"><i class="ph-fill ph-magic-wand"></i> Automated Lecture Summary</h4>
+                                <div id="dynamic-notes-content" style="font-size: 0.95rem; line-height: 1.6; color: var(--text-primary);">
+                                    <!-- Dynamic notes injected here -->
+                                </div>
+                            </div>
+                            <textarea class="notes-area" placeholder="Enter personal study notes here..."></textarea>
+                            <div style="display: flex; justify-content: flex-end; gap: 1rem;">
+                                <button class="btn-secondary small"><i class="ph ph-download-simple"></i> Download PDF</button>
+                                <button class="btn-primary small">Save to Profile</button>
+                            </div>
+                        </div>
+
+                        <!-- Doubt Tab -->
+                        <div id="tab-doubt" class="tab-pane hidden">
+                            <div class="chat-interface">
+                                <div class="chat-message">
+                                    <div class="chat-avatar"><i class="ph-fill ph-robot"></i></div>
+                                    <div style="flex: 1;">
+                                        <p style="font-weight: 600; margin-bottom: 0.25rem; color: var(--accent-primary);">VidyaSetu AI Assistant</p>
+                                        <p id="dynamic-doubt-intro">The lecture transcript has been processed. Which theoretical concept requires clarification?</p>
+                                    </div>
+                                </div>
+                                <div class="chat-input-wrapper">
+                                    <input type="text" placeholder="e.g. Elaborate on the theorem discussed at 04:12...">
+                                    <button class="btn-primary" style="padding: 0 1.5rem;"><i class="ph ph-paper-plane-right"></i> Submit</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Flashcards Tab -->
+                        <div id="tab-flashcards" class="tab-pane hidden">
+                            <div class="flashcard-container" id="dynamic-flashcard" onclick="this.classList.toggle('flipped')">
+                                <div class="flashcard-front" style="position: absolute; inset: 0; padding: 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; backface-visibility: hidden; transition: transform 0.6s;">
+                                    <h4 id="flashcard-q">Loading prompt...</h4>
+                                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 1rem;">(Click to reveal answer)</p>
+                                </div>
+                                <div class="flashcard-back" style="position: absolute; inset: 0; padding: 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; backface-visibility: hidden; transition: transform 0.6s; transform: rotateY(180deg);">
+                                    <p id="flashcard-a">Loading response...</p>
+                                </div>
+                            </div>
+                            <div class="flashcard-controls">
+                                <button class="btn-secondary" onclick="nextFlashcard(-1)"><i class="ph ph-caret-left"></i> Previous</button>
+                                <span id="flashcard-counter">1 / 3</span>
+                                <button class="btn-secondary" onclick="nextFlashcard(1)">Next <i class="ph ph-caret-right"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Quiz Tab -->
+                        <div id="tab-quiz" class="tab-pane hidden">
+                            <div class="quiz-container">
+                                <h4>Module Evaluation</h4>
+                                <p id="quiz-question" style="font-size: 1.1rem; font-weight: 500;">Loading assessment question...</p>
+                                <div class="quiz-options" id="quiz-options-container">
+                                    <!-- Dynamically injected options -->
+                                </div>
+                                <button class="btn-primary mt-2">Submit Evaluation</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Mentor Connect -->
+            <div class="learning-sidebar">
+                <div class="mentor-connect-panel">
+                    <div class="panel-header">
+                        <i class="ph-fill ph-chalkboard-teacher" style="color: var(--accent-primary);"></i> Faculty Office Hours
+                    </div>
+                    
+                    <!-- Mentor Details injected via JS -->
+                    <div id="learning-mentor-details">
+                        <!-- Mock content will be replaced by JS -->
+                    </div>
+
+                    <p class="mentor-context">Based on your recent assessment, a 15-minute consultation is recommended to resolve conceptual blockers.</p>
+                    <button class="btn-primary block">Schedule Office Hour <i class="ph ph-calendar-plus"></i></button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Profile Settings Modal -->
+    <div class="modal-overlay hidden" id="profile-modal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.8); backdrop-filter:blur(8px); z-index:2000; display:flex; justify-content:center; align-items:center; opacity:0; transition: opacity 0.3s ease; pointer-events:none;">
+        <div class="glass-panel" style="width: 90%; max-width: 500px; padding: 2.5rem; position: relative; background: var(--bg-surface-elevated); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
+            <i class="ph ph-x" style="position:absolute; top:1.5rem; right:1.5rem; font-size:1.5rem; cursor:pointer; color:var(--text-secondary);" onclick="closeProfileModal()"></i>
+            
+            <div style="display:flex; align-items:center; gap:1.5rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem;">
+                <div class="profile-icon" style="width: 42px; height: 42px; border-radius: 50%; background: #38bdf8; display: flex; justify-content: center; align-items: center; color: #0f172a; font-size: 1.5rem; cursor: pointer; box-shadow: 0 0 10px rgba(56,189,248,0.4);" onclick="openProfileModal()">
+                    <i class="ph-fill ph-user"></i>
+                </div>
+                <div>
+                    <h2 id="pm-name" style="margin:0; font-size:1.5rem; color:var(--text-primary);">Student Name</h2>
+                    <p id="pm-email" style="margin:0.25rem 0 0 0; color:var(--text-secondary);">email@domain.com</p>
+                </div>
+            </div>
+            
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem;">
+                <div>
+                    <p style="font-size:0.8rem; color:var(--text-secondary); margin:0 0 0.25rem 0; text-transform:uppercase; letter-spacing:0.5px;">Mobile</p>
+                    <p id="pm-mobile" style="margin:0; font-weight:600; color:var(--text-primary);">-</p>
+                </div>
+                <div>
+                    <p style="font-size:0.8rem; color:var(--text-secondary); margin:0 0 0.25rem 0; text-transform:uppercase; letter-spacing:0.5px;">Location</p>
+                    <p id="pm-region" style="margin:0; font-weight:600; color:var(--text-primary);">-</p>
+                </div>
+                <div>
+                    <p style="font-size:0.8rem; color:var(--text-secondary); margin:0 0 0.25rem 0; text-transform:uppercase; letter-spacing:0.5px;">Institution</p>
+                    <p id="pm-school" style="margin:0; font-weight:600; color:var(--text-primary);">-</p>
+                </div>
+                <div>
+                    <p style="font-size:0.8rem; color:var(--text-secondary); margin:0 0 0.25rem 0; text-transform:uppercase; letter-spacing:0.5px;">Target Exam</p>
+                    <p id="pm-exam" style="margin:0; font-weight:600; color:var(--text-primary);">-</p>
+                </div>
+                <div style="grid-column: span 2;">
+                    <p style="font-size:0.8rem; color:var(--text-secondary); margin:0 0 0.25rem 0; text-transform:uppercase; letter-spacing:0.5px;">Core Interest Domain</p>
+                    <p id="pm-domain" style="margin:0; font-weight:600; color:var(--text-primary);">-</p>
+                </div>
+            </div>
+            
+            <div style="display:flex; gap: 1rem;">
+                <button class="btn-primary block" style="display:flex; justify-content:center; align-items:center; gap:0.5rem;" onclick="editProfile()"><i class="ph ph-pencil-simple"></i> Edit Profile</button>
+                <button class="btn-secondary block" style="display:flex; justify-content:center; align-items:center; gap:0.5rem; color:#ef4444; border-color:rgba(239, 68, 68, 0.3);" onclick="resetApp(); closeProfileModal();"><i class="ph ph-warning-circle"></i> Reset Account</button>
+            </div>
+        </div>
+    </div>
+    <!-- 6. AI Results Page -->
+    <main class="results-page-section hidden" id="ai-results-page" style="min-height: 100vh; background: #f8fafc; padding: 2rem; position: absolute; top: 0; left: 0; width: 100%; z-index: 200;">
+        <div style="max-width: 1200px; margin: 0 auto; padding-top: 2rem;">
+            <button class="btn-secondary" onclick="backToDashboardFromResults()" style="margin-bottom: 2rem; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-weight: 500;"><i class="ph-bold ph-arrow-left"></i> Back to Dashboard</button>
+            
+            <div id="ai-results-header">
+                <h1 style="font-size: 2.8rem; font-weight: 800; color: #0f172a; margin-bottom: 0.5rem; letter-spacing: -1px;">AI Curated Matches</h1>
+                <p style="font-size: 1.2rem; color: #64748b; margin-bottom: 3rem;" id="ai-results-subtitle">Personalized for your learning profile.</p>
+            </div>
+            
+            <div id="ai-results-loading" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6rem 0; background: #ffffff; border-radius: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
+                <div class="ai-spinner"><div class="spinner-ring"></div></div>
+                <h3 style="margin-top: 2rem; font-size: 1.5rem; color: #3b82f6; font-weight: 700;">Gemini API is analyzing your profile...</h3>
+                <p style="color: #64748b; font-size: 1.1rem; margin-top: 0.5rem;">Matching your learning archetype to the perfect YouTube instructors.</p>
+            </div>
+
+            <div id="ai-results-content" class="hidden">
+                <h3 style="font-size: 1.5rem; color: #0f172a; margin-bottom: 1.5rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;"><i class="ph-fill ph-youtube-logo" style="color: #ef4444; font-size: 2rem;"></i> Top Recommended Video Modules</h3>
+                <div id="ai-video-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem;">
+                    <!-- Injected by JS -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>

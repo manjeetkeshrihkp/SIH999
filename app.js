@@ -633,6 +633,12 @@ function openProfileModal() {
     document.getElementById('pm-exam').innerText = studentData.exam || 'N/A';
     document.getElementById('pm-domain').innerText = studentData.interest || 'N/A';
     
+    // Populate API Key
+    const apiKeyInput = document.getElementById('settings-api-key');
+    if (apiKeyInput) {
+        apiKeyInput.value = localStorage.getItem('user_api_key') || '';
+    }
+    
     const modal = document.getElementById('profile-modal');
     modal.classList.remove('hidden');
     // small timeout to allow display:block before opacity transition
@@ -640,6 +646,15 @@ function openProfileModal() {
         modal.style.opacity = '1';
         modal.style.pointerEvents = 'auto';
     }, 10);
+}
+
+function saveCustomApiKey() {
+    const input = document.getElementById('settings-api-key');
+    if (input) {
+        const val = input.value.trim();
+        saveApiKey(val);
+        alert('API Key saved successfully! It will be used for all AI features.');
+    }
 }
 
 function closeProfileModal() {
@@ -683,7 +698,14 @@ function setSearch(topic) {
     executeSearch();
 }
 
-const GEMINI_API_KEY = "AQ.Ab8RN6KNk4MqIspOVW1d_BvQOp0mQAZqhs9m53RTbvvMtN8Zkw";
+let GEMINI_API_KEY = localStorage.getItem('user_api_key') || "AQ.Ab8RN6Ibia_HaYYDg8M_os6D6IRvuqnf02oLu5ASRg00NTnvIg";
+
+function saveApiKey(newKey) {
+    if (newKey) {
+        GEMINI_API_KEY = newKey.trim();
+        localStorage.setItem('user_api_key', GEMINI_API_KEY);
+    }
+}
 
 function handleSearch(event) {
     if (event.key === 'Enter') {
@@ -721,7 +743,7 @@ Recommend exactly 3 highly relevant YouTube videos for them. You MUST provide re
 Return ONLY a raw JSON array of objects, with no markdown blocks or backticks. 
 Each object must have exactly these keys: 'videoId' (string, the 11-character YouTube ID), 'title' (string), 'channel' (string), and 'reason' (string, a personalized 2-sentence explanation of why this fits their learning style).`;
 
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${GEMINI_API_KEY}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -753,37 +775,69 @@ Each object must have exactly these keys: 'videoId' (string, the 11-character Yo
     } catch (error) {
         console.error("Gemini API Error:", error);
         
-        // Fallback mock videos when API fails
-        const fallbackVideos = [
-            {
-                videoId: 'kJQP7kiw5Fk',
-                title: `Introduction to ${topic || 'the Topic'}`,
-                channel: 'Education Channel',
-                reason: `This video provides a great foundational overview of ${topic || 'the subject'}, matching your ${userProfile.archetype || 'learning'} style.`
-            },
-            {
-                videoId: 'dQw4w9WgXcQ',
-                title: `Advanced Concepts in ${topic || 'Learning'}`,
-                channel: 'Deep Dive Academy',
-                reason: `We selected this because it dives deeper into the complex parts of ${topic || 'this area'}, suitable for your skill level.`
-            },
-            {
-                videoId: 'jNQXAC9IVRw',
-                title: `Practical Examples of ${topic || 'Concepts'}`,
-                channel: 'Learn By Doing',
-                reason: `This video focuses on practical applications, which aligns perfectly with your preferred language and learning preferences.`
-            }
-        ];
+        // Topic-based mock fallback since the API key is invalid/missing
+        const searchLower = topic.toLowerCase();
+        let fallbackVideos = [];
+
+        if (searchLower.includes('html')) {
+            fallbackVideos = [
+                { videoId: 'pQN-pnXPaVg', title: 'HTML Full Course - Build a Website Tutorial', channel: 'freeCodeCamp.org', reason: 'Comprehensive guide covering all HTML fundamentals suitable for your learning style.' },
+                { videoId: 'qz0aGYrrlhU', title: 'HTML Tutorial for Beginners: HTML Crash Course', channel: 'Programming with Mosh', reason: 'A fast-paced, highly visual introduction to HTML concepts.' },
+                { videoId: 'kUMe1FH4CGY', title: 'HTML Tutorial for Beginners - Full Course', channel: 'Apna College', reason: 'Great structured approach for absolute beginners.' }
+            ];
+        } else if (searchLower.includes('css')) {
+            fallbackVideos = [
+                { videoId: '1Rs2ND1ryYc', title: 'CSS Tutorial - Zero to Hero', channel: 'freeCodeCamp.org', reason: 'Excellent visual representation of CSS styling techniques.' },
+                { videoId: 'yfoY53QXEnI', title: 'CSS Crash Course For Absolute Beginners', channel: 'Traversy Media', reason: 'Practical, hands-on learning for mastering CSS properties.' },
+                { videoId: 'Edsxf_NBFrw', title: 'CSS Tutorial In Hindi', channel: 'CodeWithHarry', reason: 'Matches your language preference perfectly with easy-to-understand explanations.' }
+            ];
+        } else if (searchLower.includes('javascript') || searchLower.includes('js')) {
+            fallbackVideos = [
+                { videoId: 'W6NZfCO5SIk', title: 'JavaScript Tutorial for Beginners', channel: 'Programming with Mosh', reason: 'A perfect foundational course for learning JS logic.' },
+                { videoId: 'jS4aFq5-91M', title: 'JavaScript Programming - Full Course', channel: 'freeCodeCamp.org', reason: 'Deep dive into practical JavaScript programming.' },
+                { videoId: 'VlPiVmYuoqw', title: 'JavaScript Tutorial In Hindi', channel: 'CodeWithHarry', reason: 'In-depth tutorial focused on logic and practical usage.' }
+            ];
+        } else if (searchLower.includes('python')) {
+            fallbackVideos = [
+                { videoId: '_uQrJ0TkZlc', title: 'Python Tutorial for Beginners', channel: 'Programming with Mosh', reason: 'Very popular beginner-friendly approach to Python.' },
+                { videoId: 'rfscVS0vtbw', title: 'Learn Python - Full Course for Beginners', channel: 'freeCodeCamp.org', reason: 'Thorough coverage of all core Python programming concepts.' },
+                { videoId: 'vLqTf2b6GZw', title: 'Python Tutorial in Hindi', channel: 'CodeWithHarry', reason: 'Excellent pacing and detailed explanations for your profile.' }
+            ];
+        } else {
+            fallbackVideos = [
+                {
+                    videoId: 'kJQP7kiw5Fk',
+                    title: `Introduction to ${topic}`,
+                    channel: 'System Fallback',
+                    reason: `Please update your GEMINI_API_KEY in app.js to get dynamic videos for "${topic}".`
+                },
+                {
+                    videoId: 'dQw4w9WgXcQ',
+                    title: `Advanced Concepts in ${topic}`,
+                    channel: 'System Fallback',
+                    reason: `Without a valid API key, we can only show these placeholder videos.`
+                },
+                {
+                    videoId: 'jNQXAC9IVRw',
+                    title: `Practical Examples of ${topic}`,
+                    channel: 'System Fallback',
+                    reason: `Add a valid Google Gemini API key to unlock the AI curator.`
+                }
+            ];
+        }
         
         renderVideos(fallbackVideos);
     }
     
     function renderVideos(videos) {
-        videos.forEach(video => {
+        videos.forEach((video, index) => {
             let thumbUrl = `https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg`;
             videoGrid.innerHTML += `
                 <div class="tutorial-card" style="box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; background: #ffffff; cursor: pointer; transition: transform 0.2s;" onclick="playVideo('${video.videoId}', '${video.title.replace(/'/g, "\\'")}')">
                     <div style="background-image: url('${thumbUrl}'); width: 100%; aspect-ratio: 16/9; background-size: cover; background-position: center; position: relative;">
+                        <div style="position: absolute; top: 12px; left: 12px; background: linear-gradient(135deg, #f59e0b, #ea580c); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.2rem; box-shadow: 0 4px 12px rgba(234, 88, 12, 0.4); z-index: 10; border: 2px solid #ffffff;">
+                            #${index + 1}
+                        </div>
                         <div style="position: absolute; inset: 0; background: rgba(15, 23, 42, 0.4); display: flex; align-items: center; justify-content: center; transition: background 0.3s;" onmouseover="this.style.background='rgba(15,23,42,0.2)'" onmouseout="this.style.background='rgba(15,23,42,0.4)'">
                             <button class="btn-primary" style="border-radius: 50%; width: 56px; height: 56px; padding: 0; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
                                 <i class="ph-fill ph-play" style="font-size: 1.5rem; margin-left: 4px;"></i>
@@ -793,9 +847,12 @@ Each object must have exactly these keys: 'videoId' (string, the 11-character Yo
                     <div style="padding: 1.5rem;">
                         <h4 style="font-size: 1.1rem; color: #0f172a; margin: 0 0 0.5rem 0; line-height: 1.4; font-weight: 700;">${video.title}</h4>
                         <p style="font-size: 0.9rem; color: #64748b; font-weight: 600; margin: 0 0 1rem 0;"><i class="ph-fill ph-user-circle"></i> ${video.channel}</p>
-                        <div style="background: #f1f5f9; padding: 1rem; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                        <div style="background: #f1f5f9; padding: 1rem; border-radius: 8px; border-left: 4px solid #3b82f6; margin-bottom: 1.5rem;">
                             <p style="font-size: 0.9rem; color: #334155; margin: 0; line-height: 1.5;"><i class="ph-fill ph-sparkle" style="color: #3b82f6;"></i> ${video.reason}</p>
                         </div>
+                        <button class="btn-primary block" style="width: 100%; display: flex; justify-content: center; align-items: center; gap: 0.5rem; font-size: 1rem; padding: 0.75rem;">
+                            <i class="ph-fill ph-play-circle" style="font-size: 1.25rem;"></i> Start Learning
+                        </button>
                     </div>
                 </div>
             `;
@@ -855,46 +912,187 @@ function playVideo(videoId, title) {
     generateAIContent(title);
 }
 
-function generateAIContent(topic) {
+let currentQuizData = [];
+let currentChatTopic = "";
+
+async function generateAIContent(topic) {
     const loader = document.getElementById('ai-hub-loader');
     loader.classList.remove('hidden');
+    currentChatTopic = topic;
     
     // Clear previous dynamic content
     document.getElementById('dynamic-notes-content').innerHTML = '';
-    
-    setTimeout(() => {
-        // --- Generate Notes ---
-        document.getElementById('dynamic-notes-content').innerHTML = `
-            <ul style="padding-left: 1.5rem; margin-top: 0.5rem;">
-                <li style="margin-bottom: 0.75rem;"><strong>Academic Premise:</strong> ${topic} is fundamental to advanced curriculum standards.</li>
-                <li style="margin-bottom: 0.75rem;"><strong>Primary Objective:</strong> Achieve a high degree of ${userProfile.archetype.includes('Innovator') ? 'practical application' : 'theoretical proficiency'}.</li>
-                <li style="margin-bottom: 0.75rem;"><strong>Assessment Note:</strong> The concepts outlined are highly probable to appear in national standardized examinations.</li>
-            </ul>
-        `;
-        
-        // --- Generate Doubt Intro ---
-        document.getElementById('dynamic-doubt-intro').innerText = `The academic transcript for "${topic}" has been processed. What specific concept requires clarification?`;
-        
-        // --- Generate Flashcards ---
-        currentFlashcards = [
-            { q: `What is the academic definition of ${topic}?`, a: "A formalized methodology to approach complex problem sets systematically." },
-            { q: "What is a common misconception?", a: "Failing to account for standardized edge cases in initial analyses." },
-            { q: "Relevance to Objective?", a: `It is critical for ${studentData.goal === 'Career' ? 'industry placement evaluations' : 'university examinations'}.` }
-        ];
+    document.getElementById('quiz-list-container').innerHTML = '';
+    document.getElementById('quiz-results').classList.add('hidden');
+    document.getElementById('chat-history').innerHTML = `
+        <div class="chat-message">
+            <div class="chat-avatar"><i class="ph-fill ph-robot"></i></div>
+            <div style="flex: 1;">
+                <p style="font-weight: 600; margin-bottom: 0.25rem; color: var(--accent-primary);">VidyaSetu AI Assistant</p>
+                <p id="dynamic-doubt-intro">The lecture transcript for "${topic}" has been processed. What specific concept requires clarification?</p>
+            </div>
+        </div>
+    `;
+
+    try {
+        const generateText = async (prompt, isJson = false) => {
+            const body = { contents: [{ parts: [{ text: prompt }] }] };
+            if (isJson) body.generationConfig = { responseMimeType: "application/json" };
+            
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${GEMINI_API_KEY}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            const data = await response.json();
+            
+            if (data.error) throw new Error(data.error.message);
+            if (!data.candidates || !data.candidates[0].content) throw new Error("Invalid AI response");
+            
+            let text = data.candidates[0].content.parts[0].text.trim();
+            if (isJson) {
+                text = text.replace(/```json/gi, '').replace(/```/g, '').trim();
+            }
+            return text;
+        };
+
+        // Parallel Requests
+        const [notesHtml, flashcardsJson, quizJson] = await Promise.all([
+            generateText(`You are an expert tutor. Write a concise, 4-bullet point summary of the topic "${topic}" in raw HTML format using <ul>, <li>, and <strong> tags. Focus on key academic principles suitable for a ${userProfile.archetype}. Do not use markdown backticks, just raw HTML.`),
+            generateText(`You are an expert tutor. Generate exactly 5 flashcards for the topic "${topic}". Return ONLY a raw JSON array of objects with no markdown backticks. Each object must have a 'q' (question) and 'a' (answer) key.`, true),
+            generateText(`You are an expert tutor. Generate a 5-question multiple choice quiz on the topic "${topic}". Return ONLY a raw JSON array of objects with no markdown backticks. Each object must have: 'q' (the question string), 'options' (array of 4 string options), and 'correctIndex' (integer 0-3 indicating the correct option).`, true)
+        ]);
+
+        // Notes
+        document.getElementById('dynamic-notes-content').innerHTML = notesHtml.replace(/```html|```/g, '');
+
+        // Flashcards
+        currentFlashcards = JSON.parse(flashcardsJson);
         currentFlashcardIndex = 0;
         renderFlashcard();
+
+        // Quiz
+        currentQuizData = JSON.parse(quizJson);
+        renderQuizList();
+
+    } catch (err) {
+        console.error("AI Generation failed:", err);
+        document.getElementById('dynamic-notes-content').innerHTML = `<p style="color:red;">Failed to generate AI content: ${err.message}. Please try again.</p>`;
+    }
+
+    loader.classList.add('hidden');
+}
+
+function renderQuizList() {
+    const container = document.getElementById('quiz-list-container');
+    container.innerHTML = '';
+    currentQuizData.forEach((item, qIndex) => {
+        let optionsHtml = item.options.map((opt, oIndex) => `
+            <label class="quiz-option" style="display:block; margin-bottom: 0.5rem; cursor: pointer;">
+                <input type="radio" name="q${qIndex}" value="${oIndex}"> ${opt}
+            </label>
+        `).join('');
         
-        // --- Generate Quiz ---
-        document.getElementById('quiz-question').innerText = `Select the most accurate statement regarding ${topic} based on the lecture material:`;
-        document.getElementById('quiz-options-container').innerHTML = `
-            <label class="quiz-option"><input type="radio" name="q1"> It serves as a substitute for foundational theory.</label>
-            <label class="quiz-option"><input type="radio" name="q1"> It requires comprehension of underlying structural principles.</label>
-            <label class="quiz-option"><input type="radio" name="q1"> It is strictly utilized in qualitative research methodologies.</label>
+        container.innerHTML += `
+            <div style="margin-bottom: 2rem;">
+                <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem;">${qIndex + 1}. ${item.q}</p>
+                <div class="quiz-options">
+                    ${optionsHtml}
+                </div>
+            </div>
         `;
+    });
+}
+
+function submitQuiz() {
+    let score = 0;
+    currentQuizData.forEach((item, qIndex) => {
+        const selected = document.querySelector(`input[name="q${qIndex}"]:checked`);
+        if (selected && parseInt(selected.value) === item.correctIndex) {
+            score++;
+        }
+    });
+    const results = document.getElementById('quiz-results');
+    results.innerText = `You scored ${score} out of 5!`;
+    results.classList.remove('hidden');
+}
+
+async function submitChat() {
+    const input = document.getElementById('chat-input');
+    const msg = input.value.trim();
+    if (!msg) return;
+    
+    input.value = '';
+    const history = document.getElementById('chat-history');
+    
+    const safeMsg = msg.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    
+    // User message
+    const userDiv = document.createElement('div');
+    userDiv.className = 'chat-message';
+    userDiv.style.flexDirection = 'row-reverse';
+    userDiv.innerHTML = `
+        <div class="chat-avatar" style="background: var(--primary);"><i class="ph-fill ph-user" style="color:white;"></i></div>
+        <div style="flex: 1; text-align: right;">
+            <p style="font-weight: 600; margin-bottom: 0.25rem; color: var(--text-primary);">You</p>
+            <p style="background: var(--bg-secondary); padding: 0.75rem; border-radius: 12px; display: inline-block; text-align: left;">${safeMsg}</p>
+        </div>
+    `;
+    history.appendChild(userDiv);
+    history.scrollTop = history.scrollHeight;
+
+    // AI Loading
+    const loadingDiv = document.createElement('div');
+    loadingDiv.className = 'chat-message';
+    loadingDiv.innerHTML = `
+        <div class="chat-avatar"><i class="ph-fill ph-robot"></i></div>
+        <div style="flex: 1;">
+            <p style="font-weight: 600; margin-bottom: 0.25rem; color: var(--accent-primary);">VidyaSetu AI Assistant</p>
+            <p>Thinking...</p>
+        </div>
+    `;
+    history.appendChild(loadingDiv);
+    history.scrollTop = history.scrollHeight;
+
+    try {
+        const prompt = `You are an AI Tutor named VidyaSetu AI Assistant. You are helping a student who is learning about "${currentChatTopic}". The student asks: "${msg}". Provide a direct, professional, and academically accurate response. Write in plain paragraphs ONLY. Do NOT use markdown formatting, hashtags (###), bullet points, or asterisks (**). Answer exactly what is asked without conversational filler.`;
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${GEMINI_API_KEY}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        });
+        const data = await response.json();
         
-        // Hide Loader
-        loader.classList.add('hidden');
-    }, 2000); // Simulate 2s AI generation time
+        if (data.error) throw new Error(data.error.message);
+        if (!data.candidates || !data.candidates[0].content) throw new Error("Invalid AI response");
+        
+        let aiResponse = data.candidates[0].content.parts[0].text;
+        
+        // Strip out markdown formatting (asterisks, hashtags) to keep it clean and professional
+        aiResponse = aiResponse.replace(/[*#]/g, '');
+        
+        loadingDiv.innerHTML = `
+            <div class="chat-avatar"><i class="ph-fill ph-robot"></i></div>
+            <div style="flex: 1;">
+                <p style="font-weight: 600; margin-bottom: 0.25rem; color: var(--accent-primary);">VidyaSetu AI Assistant</p>
+                <p>${aiResponse.replace(/\n/g, '<br>')}</p>
+            </div>
+        `;
+    } catch (err) {
+        console.error(err);
+        loadingDiv.innerHTML = `
+            <div class="chat-avatar"><i class="ph-fill ph-robot"></i></div>
+            <div style="flex: 1;">
+                <p style="font-weight: 600; margin-bottom: 0.25rem; color: red;">System Error</p>
+                <p>Sorry, I encountered an error: ${err.message}</p>
+            </div>
+        `;
+    }
+    history.scrollTop = history.scrollHeight;
+}
+
+function handleChatEnter(event) {
+    if (event.key === 'Enter') submitChat();
 }
 
 function renderFlashcard() {

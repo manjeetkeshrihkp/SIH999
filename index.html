@@ -36,7 +36,7 @@
             </nav>
         </div>
         <div class="sidebar-bottom">
-            <a href="javascript:void(0)" title="Settings"><i class="ph ph-gear"></i></a>
+            <a href="javascript:void(0)" title="Settings" onclick="openProfileModal()"><i class="ph ph-gear"></i></a>
             <div class="user-avatar" onclick="openProfileModal()" title="Profile & Settings" style="cursor:pointer;"><i class="ph-fill ph-user"></i></div>
         </div>
     </aside>
@@ -783,16 +783,18 @@
                         <!-- Doubt Tab -->
                         <div id="tab-doubt" class="tab-pane hidden">
                             <div class="chat-interface">
-                                <div class="chat-message">
-                                    <div class="chat-avatar"><i class="ph-fill ph-robot"></i></div>
-                                    <div style="flex: 1;">
-                                        <p style="font-weight: 600; margin-bottom: 0.25rem; color: var(--accent-primary);">VidyaSetu AI Assistant</p>
-                                        <p id="dynamic-doubt-intro">The lecture transcript has been processed. Which theoretical concept requires clarification?</p>
+                                <div id="chat-history" style="max-height: 400px; overflow-y: auto; padding-bottom: 1rem; flex: 1;">
+                                    <div class="chat-message">
+                                        <div class="chat-avatar"><i class="ph-fill ph-robot"></i></div>
+                                        <div style="flex: 1;">
+                                            <p style="font-weight: 600; margin-bottom: 0.25rem; color: var(--accent-primary);">VidyaSetu AI Assistant</p>
+                                            <p id="dynamic-doubt-intro">The lecture transcript has been processed. Which theoretical concept requires clarification?</p>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="chat-input-wrapper">
-                                    <input type="text" placeholder="e.g. Elaborate on the theorem discussed at 04:12...">
-                                    <button class="btn-primary" style="padding: 0 1.5rem;"><i class="ph ph-paper-plane-right"></i> Submit</button>
+                                    <input type="text" id="chat-input" placeholder="e.g. Elaborate on the theorem discussed at 04:12..." onkeypress="handleChatEnter(event)">
+                                    <button id="chat-submit" class="btn-primary" style="padding: 0 1.5rem;" onclick="submitChat()"><i class="ph ph-paper-plane-right"></i> Submit</button>
                                 </div>
                             </div>
                         </div>
@@ -819,11 +821,11 @@
                         <div id="tab-quiz" class="tab-pane hidden">
                             <div class="quiz-container">
                                 <h4>Module Evaluation</h4>
-                                <p id="quiz-question" style="font-size: 1.1rem; font-weight: 500;">Loading assessment question...</p>
-                                <div class="quiz-options" id="quiz-options-container">
-                                    <!-- Dynamically injected options -->
+                                <div id="quiz-list-container" style="max-height: 400px; overflow-y: auto; padding-right: 1rem;">
+                                    <p style="font-size: 1.1rem; font-weight: 500;">Loading assessment questions...</p>
                                 </div>
-                                <button class="btn-primary mt-2">Submit Evaluation</button>
+                                <button class="btn-primary mt-4" onclick="submitQuiz()">Submit Evaluation</button>
+                                <div id="quiz-results" class="hidden" style="margin-top: 1rem; font-weight: bold; font-size: 1.2rem; color: var(--accent-primary);"></div>
                             </div>
                         </div>
                     </div>
@@ -887,6 +889,15 @@
                 </div>
             </div>
             
+            <div style="margin-bottom: 2.5rem; background: rgba(15, 23, 42, 0.02); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                <p style="font-size:0.8rem; color:var(--text-secondary); margin:0 0 0.5rem 0; text-transform:uppercase; letter-spacing:0.5px; font-weight: 700;">Google Gemini API Key</p>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="password" id="settings-api-key" placeholder="Enter your Gemini API Key..." style="flex: 1; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 6px; font-family: monospace;">
+                    <button class="btn-primary small" onclick="saveCustomApiKey()" style="padding: 0 1rem;">Save</button>
+                </div>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0.5rem 0 0 0;">Required for AI features like the Tutor, Notes, and Quizzes.</p>
+            </div>
+            
             <div style="display:flex; gap: 1rem;">
                 <button class="btn-primary block" style="display:flex; justify-content:center; align-items:center; gap:0.5rem;" onclick="editProfile()"><i class="ph ph-pencil-simple"></i> Edit Profile</button>
                 <button class="btn-secondary block" style="display:flex; justify-content:center; align-items:center; gap:0.5rem; color:#ef4444; border-color:rgba(239, 68, 68, 0.3);" onclick="resetApp(); closeProfileModal();"><i class="ph ph-warning-circle"></i> Reset Account</button>
@@ -905,12 +916,12 @@
             
             <div id="ai-results-loading" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6rem 0; background: #ffffff; border-radius: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
                 <div class="ai-spinner"><div class="spinner-ring"></div></div>
-                <h3 style="margin-top: 2rem; font-size: 1.5rem; color: #3b82f6; font-weight: 700;">Gemini API is analyzing your profile...</h3>
+                <h3 style="margin-top: 2rem; font-size: 1.5rem; color: #3b82f6; font-weight: 700;">VidyaSetu is analyzing your profile...</h3>
                 <p style="color: #64748b; font-size: 1.1rem; margin-top: 0.5rem;">Matching your learning archetype to the perfect YouTube instructors.</p>
             </div>
 
             <div id="ai-results-content" class="hidden">
-                <h3 style="font-size: 1.5rem; color: #0f172a; margin-bottom: 1.5rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;"><i class="ph-fill ph-youtube-logo" style="color: #ef4444; font-size: 2rem;"></i> Top Recommended Video Modules</h3>
+                <h3 style="font-size: 1.5rem; color: #0f172a; margin-bottom: 1.5rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;"><i class="ph-fill ph-youtube-logo" style="color: #ef4444; font-size: 2rem;"></i> Top Recommended Video Modules According to You</h3>
                 <div id="ai-video-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem;">
                     <!-- Injected by JS -->
                 </div>

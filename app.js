@@ -155,7 +155,43 @@ function toggleCustomSchool() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', initDropdowns);
+document.addEventListener('DOMContentLoaded', () => {
+    initDropdowns();
+    generateMentors();
+});
+
+function generateMentors() {
+    const grid = document.getElementById('mentors-grid');
+    if (!grid) return;
+    
+    const firstNames = ["Aarav", "Vivaan", "Aditya", "Vihaan", "Arjun", "Sai", "Ayaan", "Krishna", "Ishaan", "Shaurya", "Diya", "Sanya", "Priya", "Neha", "Riya", "Kavya", "Ananya", "Ishita", "Aarohi", "Meera", "Alex", "Sarah", "John", "Emma", "David"];
+    const lastNames = ["Sharma", "Verma", "Gupta", "Malhotra", "Singh", "Patel", "Reddy", "Rao", "Das", "Bose", "Nair", "Iyer", "Pillai", "Menon", "Joshi", "Smith", "Johnson", "Williams", "Brown", "Jones"];
+    const roles = ["Professor", "Dr.", "Senior Scientist", "Industry Expert", "Software Engineer", "Research Scholar", "Lead Instructor", "Data Scientist", "System Architect"];
+    const institutions = ["IIT Delhi", "IIT Bombay", "IISc Bangalore", "ISRO", "Google", "Microsoft", "Amazon", "Meta", "NIT Trichy", "BITS Pilani", "Stanford", "MIT"];
+    const specialties = ["Data Structures", "Quantum Physics", "Machine Learning", "System Design", "Calculus", "Thermodynamics", "Career Guidance", "Cloud Computing", "AI Research", "Robotics", "App Development"];
+    const colors = ["b6e3f4", "a78bfa", "facc15", "fb923c", "34d399", "f472b6", "94a3b8", "818cf8"];
+
+    let html = '';
+    for (let i = 0; i < 50; i++) {
+        const fn = firstNames[Math.floor(Math.random() * firstNames.length)];
+        const ln = lastNames[Math.floor(Math.random() * lastNames.length)];
+        const role = roles[Math.floor(Math.random() * roles.length)];
+        const inst = institutions[Math.floor(Math.random() * institutions.length)];
+        const spec = specialties[Math.floor(Math.random() * specialties.length)];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        
+        html += `
+        <div class="glass-panel" style="padding: 1.5rem; text-align: center; display: flex; flex-direction: column; align-items: center; background: var(--bg-surface);">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=${fn}${ln}&backgroundColor=${color}" alt="${fn}" style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 1rem; border: 3px solid var(--border-color);">
+            <h3 style="margin: 0 0 0.25rem 0; font-size: 1.1rem; color: var(--text-primary);">${role} ${fn} ${ln}</h3>
+            <p style="margin: 0 0 1rem 0; font-size: 0.85rem; color: var(--text-secondary);">${inst}</p>
+            <span class="tag" style="background: #e2e8f0; color: #475569; font-size: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 12px; margin-bottom: 1.5rem;">${spec}</span>
+            <button class="btn-primary block" onclick="openDoubtModal()" style="width: 100%; margin-top: auto;">Connect <i class="ph ph-video-camera"></i></button>
+        </div>
+        `;
+    }
+    grid.innerHTML = html;
+}
 
 let userProfile = {
     archetype: '',
@@ -612,8 +648,38 @@ function goToDashboard() {
     if(pubActions) pubActions.style.display = 'none';
     if(dashActions) dashActions.style.display = 'flex';
     
-    // Update Dashboard header
+    // Update Dashboard header & Sidebar Profile
     dashboardArchetype.innerText = userProfile.archetype;
+    
+    // Update sidebar tooltip with user name
+    const sidebarAvatarContainer = document.querySelector('.sidebar-bottom .user-avatar');
+    if (sidebarAvatarContainer && typeof studentData !== 'undefined' && studentData.name) {
+        sidebarAvatarContainer.setAttribute('data-title', studentData.name);
+    }
+    
+    // Show AI avatar in sidebar and header
+    const sidebarImg = document.getElementById('sidebar-bottom-avatar');
+    const sidebarIcon = document.getElementById('sidebar-bottom-icon');
+    const headerImg = document.getElementById('header-profile-avatar');
+    const headerIcon = document.getElementById('header-profile-fallback');
+    const headerName = document.getElementById('header-profile-name');
+    
+    if (headerName && typeof studentData !== 'undefined' && studentData.name) {
+        headerName.innerText = studentData.name.split(' ')[0];
+    }
+    
+    if (typeof userProfile !== 'undefined' && userProfile.avatar) {
+        if (sidebarImg) {
+            sidebarImg.src = userProfile.avatar;
+            sidebarImg.style.display = 'block';
+            if (sidebarIcon) sidebarIcon.style.display = 'none';
+        }
+        if (headerImg) {
+            headerImg.src = userProfile.avatar;
+            headerImg.style.display = 'block';
+            if (headerIcon) headerIcon.style.display = 'none';
+        }
+    }
     
     // Reset Search View
     searchInput.value = '';
@@ -664,6 +730,375 @@ function closeProfileModal() {
     setTimeout(() => {
         modal.classList.add('hidden');
     }, 300);
+}
+
+// --- Doubt Connect Modal Logic ---
+function openDoubtModal() {
+    document.getElementById('doubt-step-1').classList.remove('hidden');
+    document.getElementById('doubt-step-2').classList.add('hidden');
+    document.getElementById('doubt-step-3').classList.add('hidden');
+    
+    document.getElementById('doubt-topic').value = '';
+    document.getElementById('doubt-details').value = '';
+    
+    const modal = document.getElementById('doubt-modal');
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+        modal.style.opacity = '1';
+        modal.style.pointerEvents = 'auto';
+    }, 10);
+}
+
+function closeDoubtModal() {
+    const modal = document.getElementById('doubt-modal');
+    modal.style.opacity = '0';
+    modal.style.pointerEvents = 'none';
+    setTimeout(() => {
+        modal.classList.add('hidden');
+    }, 300);
+}
+
+async function generateDoubtSummary() {
+    const topic = document.getElementById('doubt-topic').value.trim();
+    const details = document.getElementById('doubt-details').value.trim();
+    
+    if (!topic || !details) {
+        alert("Please fill out both fields so the mentor can understand your doubt.");
+        return;
+    }
+    
+    // Switch to loading
+    document.getElementById('doubt-step-1').classList.add('hidden');
+    document.getElementById('doubt-step-2').classList.remove('hidden');
+    
+    try {
+        const prompt = `You are an AI assistant. A student named ${studentData.name || 'Student'} is having a doubt in the topic "${topic}". Their specific question is: "${details}". Please write a concise, professional 3-4 sentence brief summarizing this doubt for a human mentor to read. Do not use markdown tags like asterisks or hashtags. Just plain text.`;
+        
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${GEMINI_API_KEY}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }]
+            })
+        });
+        
+        const data = await response.json();
+        if (data.error) throw new Error(data.error.message);
+        if (!data.candidates || !data.candidates[0].content) throw new Error("Invalid AI response");
+        
+        const summary = data.candidates[0].content.parts[0].text.replace(/[*#]/g, '');
+        
+        // Show Step 3
+        document.getElementById('doubt-step-2').classList.add('hidden');
+        document.getElementById('doubt-step-3').classList.remove('hidden');
+        
+        document.getElementById('doubt-summary-content').innerHTML = summary.replace(/\n/g, '<br>');
+        
+    } catch (e) {
+        console.error("Doubt Summary Error:", e);
+        alert("There was an error generating the summary: " + e.message);
+        document.getElementById('doubt-step-2').classList.add('hidden');
+        document.getElementById('doubt-step-1').classList.remove('hidden');
+    }
+}
+
+let selectedMentorData = null;
+let meetingStream = null;
+let meetingTimerInt = null;
+
+function findMentor() {
+    closeDoubtModal();
+    startMentorSearchAnimation();
+}
+
+function startMentorSearchAnimation() {
+    const overlay = document.getElementById('mentor-search-overlay');
+    const textEl = document.getElementById('search-overlay-text');
+    
+    overlay.classList.remove('hidden');
+    textEl.style.opacity = '0';
+    
+    setTimeout(() => {
+        textEl.innerText = "Scanning 300+ Mentors...";
+        textEl.style.opacity = '1';
+        overlay.style.opacity = '1';
+        overlay.style.pointerEvents = 'auto';
+    }, 10);
+    
+    setTimeout(() => {
+        textEl.style.opacity = '0';
+        setTimeout(() => {
+            textEl.innerText = "Filtering by your doubt topic...";
+            textEl.style.opacity = '1';
+        }, 300);
+    }, 2000);
+    
+    setTimeout(() => {
+        textEl.style.opacity = '0';
+        setTimeout(() => {
+            textEl.innerText = "5 Matches Found!";
+            textEl.style.opacity = '1';
+        }, 300);
+    }, 4000);
+    
+    setTimeout(() => {
+        overlay.style.opacity = '0';
+        overlay.style.pointerEvents = 'none';
+        setTimeout(() => {
+            overlay.classList.add('hidden');
+            generateMatchedMentors(5);
+            navigateSidebar('mentors');
+        }, 500);
+    }, 5500);
+}
+
+function generateMatchedMentors(count = 5) {
+    const grid = document.getElementById('mentors-grid');
+    if (!grid) return;
+    
+    // Hide connect bar if visible
+    const connectBar = document.getElementById('floating-connect-bar');
+    if (connectBar) connectBar.classList.add('hidden');
+    selectedMentorData = null;
+    
+    const firstNames = ["Aarav", "Vivaan", "Aditya", "Vihaan", "Arjun", "Sai", "Ayaan", "Krishna", "Ishaan", "Shaurya", "Diya", "Sanya", "Priya", "Neha", "Riya", "Kavya", "Ananya", "Ishita", "Aarohi", "Meera", "Alex", "Sarah", "John", "Emma", "David"];
+    const lastNames = ["Sharma", "Verma", "Gupta", "Malhotra", "Singh", "Patel", "Reddy", "Rao", "Das", "Bose", "Nair", "Iyer", "Pillai", "Menon", "Joshi", "Smith", "Johnson", "Williams", "Brown", "Jones"];
+    const roles = ["Professor", "Dr.", "Senior Scientist", "Industry Expert", "Software Engineer", "Research Scholar", "Lead Instructor", "Data Scientist", "System Architect"];
+    const institutions = ["IIT Delhi", "IIT Bombay", "IISc Bangalore", "ISRO", "Google", "Microsoft", "Amazon", "Meta", "NIT Trichy", "BITS Pilani", "Stanford", "MIT"];
+    const specialties = ["Data Structures", "Quantum Physics", "Machine Learning", "System Design", "Calculus", "Thermodynamics", "Career Guidance", "Cloud Computing", "AI Research", "Robotics", "App Development"];
+    const colors = ["b6e3f4", "a78bfa", "facc15", "fb923c", "34d399", "f472b6", "94a3b8", "818cf8"];
+
+    let html = '';
+    for (let i = 0; i < count; i++) {
+        const fn = firstNames[Math.floor(Math.random() * firstNames.length)];
+        const ln = lastNames[Math.floor(Math.random() * lastNames.length)];
+        const role = roles[Math.floor(Math.random() * roles.length)];
+        const inst = institutions[Math.floor(Math.random() * institutions.length)];
+        const spec = specialties[Math.floor(Math.random() * specialties.length)];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        
+        const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${fn}${ln}&backgroundColor=${color}`;
+        const fullName = `${role} ${fn} ${ln}`;
+        
+        html += `
+        <div class="glass-panel mentor-card selectable-card" onclick="selectMentor(this, '${fullName}', '${avatarUrl}')" style="padding: 1.5rem; text-align: center; display: flex; flex-direction: column; align-items: center; background: var(--bg-surface); cursor: pointer; transition: all 0.2s ease; border: 2px solid transparent;">
+            <img src="${avatarUrl}" alt="${fn}" style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 1rem; border: 3px solid var(--border-color);">
+            <h3 style="margin: 0 0 0.25rem 0; font-size: 1.1rem; color: var(--text-primary); pointer-events: none;">${fullName}</h3>
+            <p style="margin: 0 0 1rem 0; font-size: 0.85rem; color: var(--text-secondary); pointer-events: none;">${inst}</p>
+            <span class="tag" style="background: #e2e8f0; color: #475569; font-size: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 12px; margin-bottom: 1.5rem; pointer-events: none;">${spec}</span>
+            <div class="select-indicator" style="width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--border-color); display: flex; justify-content: center; align-items: center; margin-top: auto;"></div>
+        </div>
+        `;
+    }
+    grid.innerHTML = html;
+}
+
+function selectMentor(element, name, avatar) {
+    // Remove selected state from all
+    document.querySelectorAll('.mentor-card').forEach(card => {
+        card.style.borderColor = 'transparent';
+        const indicator = card.querySelector('.select-indicator');
+        if (indicator) {
+            indicator.style.background = 'transparent';
+            indicator.style.borderColor = 'var(--border-color)';
+            indicator.innerHTML = '';
+        }
+    });
+    
+    // Add selected state to clicked
+    element.style.borderColor = 'var(--accent-primary)';
+    const indicator = element.querySelector('.select-indicator');
+    if (indicator) {
+        indicator.style.background = 'var(--accent-primary)';
+        indicator.style.borderColor = 'var(--accent-primary)';
+        indicator.innerHTML = '<i class="ph-bold ph-check" style="color: white; font-size: 0.9rem;"></i>';
+    }
+    
+    // Update floating bar
+    selectedMentorData = { name, avatar };
+    document.getElementById('fc-name').innerText = name;
+    document.getElementById('fc-avatar').src = avatar;
+    document.getElementById('floating-connect-bar').classList.remove('hidden');
+}
+
+function startMeetingSession() {
+    document.getElementById('floating-connect-bar').classList.add('hidden');
+    navigateSidebar('meeting');
+    
+    document.getElementById('pip-avatar').src = selectedMentorData.avatar;
+    document.getElementById('pip-name').innerText = selectedMentorData.name;
+    
+    const waitingOverlay = document.getElementById('waiting-overlay');
+    if (waitingOverlay) waitingOverlay.style.display = 'flex';
+    
+    // Reset timer display immediately
+    document.getElementById('meeting-timer').innerText = "00:00";
+    if (meetingTimerInt) clearInterval(meetingTimerInt);
+    
+    // Simulate waiting for faculty
+    setTimeout(() => {
+        if (waitingOverlay) waitingOverlay.style.display = 'none';
+        
+        // Start actual timer
+        let seconds = 0;
+        meetingTimerInt = setInterval(() => {
+            seconds++;
+            const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+            const s = String(seconds % 60).padStart(2, '0');
+            document.getElementById('meeting-timer').innerText = `${m}:${s}`;
+        }, 1000);
+    }, 3000);
+}
+
+async function startWebCam() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        meetingStream = stream;
+        const video = document.getElementById('self-video');
+        video.srcObject = stream;
+        video.style.opacity = '1';
+        document.getElementById('start-camera-overlay').style.display = 'none';
+    } catch (e) {
+        alert("Camera access denied or unavailable.");
+    }
+}
+
+// --- Voice AI Integration ---
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recognition = null;
+if (SpeechRecognition) {
+    recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    
+    recognition.onstart = function() {
+        const micBtn = document.getElementById('btn-mic');
+        if (micBtn) {
+            micBtn.style.background = '#ef4444';
+        }
+        document.getElementById('live-captions').classList.remove('hidden');
+        document.getElementById('caption-speaker').innerText = 'System';
+        document.getElementById('caption-text').innerText = 'Listening...';
+    };
+    
+    recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        document.getElementById('caption-speaker').innerText = 'You';
+        document.getElementById('caption-text').innerText = transcript;
+        getMentorAIResponse(transcript);
+    };
+    
+    recognition.onerror = function(event) {
+        document.getElementById('caption-speaker').innerText = 'System';
+        document.getElementById('caption-text').innerText = 'Microphone error.';
+        resetMicButton();
+    };
+    
+    recognition.onend = function() {
+        resetMicButton();
+    };
+}
+
+function resetMicButton() {
+    const micBtn = document.getElementById('btn-mic');
+    if (micBtn) {
+        micBtn.style.background = '#374151';
+    }
+}
+
+function startVoiceInteraction() {
+    if (window.speechSynthesis && window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel(); // Stop AI from talking if user interrupts
+    }
+    if (recognition) {
+        try { recognition.start(); } catch(e) {}
+    } else {
+        alert("Speech Recognition is not supported in this browser.");
+    }
+}
+
+async function getMentorAIResponse(userText) {
+    try {
+        const mentorName = selectedMentorData ? selectedMentorData.name : 'Mentor';
+        const prompt = `You are ${mentorName}, an expert tutor in a live video call. The student just said: "${userText}". Provide a very brief (1-2 sentences), helpful, and conversational spoken response. Do not use any markdown formatting or special characters.`;
+        
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${GEMINI_API_KEY}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }]
+            })
+        });
+        
+        const data = await response.json();
+        if (data.error) throw new Error(data.error.message);
+        
+        let aiResponse = data.candidates[0].content.parts[0].text.replace(/[*#]/g, '');
+        
+        document.getElementById('caption-speaker').innerText = mentorName;
+        document.getElementById('caption-text').innerText = aiResponse;
+        
+        speakText(aiResponse);
+        
+    } catch (e) {
+        console.error("Voice AI Error:", e);
+        document.getElementById('caption-speaker').innerText = 'System';
+        document.getElementById('caption-text').innerText = 'Error connecting to AI.';
+    }
+}
+
+function speakText(text) {
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        window.speechSynthesis.speak(utterance);
+    }
+}
+
+function endCall() {
+    try {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+        }
+    } catch(e) {}
+    
+    try {
+        if (recognition) {
+            recognition.stop();
+        }
+    } catch(e) {}
+    
+    try {
+        const captions = document.getElementById('live-captions');
+        if (captions) captions.classList.add('hidden');
+        resetMicButton();
+    } catch(e) {}
+    
+    try {
+        if (meetingStream) {
+            meetingStream.getTracks().forEach(track => track.stop());
+            meetingStream = null;
+        }
+    } catch(e) {}
+    
+    try {
+        if (meetingTimerInt) {
+            clearInterval(meetingTimerInt);
+            meetingTimerInt = null;
+        }
+    } catch(e) {}
+    
+    try {
+        const video = document.getElementById('self-video');
+        if (video) {
+            video.srcObject = null;
+            video.style.opacity = '0';
+        }
+        const overlay = document.getElementById('start-camera-overlay');
+        if (overlay) overlay.style.display = 'block';
+    } catch(e) {}
+    
+    // Most important part:
+    navigateSidebar('dashboard');
 }
 
 function editProfile() {
@@ -869,6 +1304,10 @@ const learningVideoContainer = document.getElementById('learning-video-container
 const learningTopicTitle = document.getElementById('learning-topic-title');
 const learningMentorDetails = document.getElementById('learning-mentor-details');
 
+let youtubePlayer = null;
+let progressInterval = null;
+let userStrikes = 0;
+
 let currentFlashcards = [];
 let currentFlashcardIndex = 0;
 
@@ -881,13 +1320,32 @@ function playVideo(videoId, title) {
     // Set Title
     learningTopicTitle.innerText = title;
     
-    // Inject iframe dynamically
-    learningVideoContainer.innerHTML = `
-        <iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1" 
-        title="VidyaSetu Video Player" frameborder="0" 
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-        allowfullscreen></iframe>
-    `;
+    // Reset Progress Bar
+    const progressBar = document.getElementById('video-progress-bar');
+    if (progressBar) progressBar.style.width = '0%';
+    
+    // Clean up existing player
+    if (youtubePlayer) {
+        youtubePlayer.destroy();
+        youtubePlayer = null;
+    }
+    if (progressInterval) {
+        clearInterval(progressInterval);
+        progressInterval = null;
+    }
+    
+    // Re-create the div for the player
+    learningVideoContainer.innerHTML = '<div id="yt-player"></div>';
+    
+    // Check if YouTube API is loaded
+    if (typeof YT !== 'undefined' && YT.Player) {
+        initYouTubePlayer(videoId);
+    } else {
+        // If API script hasn't fully loaded yet, wait a moment and retry
+        setTimeout(() => {
+            if (typeof YT !== 'undefined' && YT.Player) initYouTubePlayer(videoId);
+        }, 500);
+    }
 
     // Populate Mentor Panel (Re-using top mentor logic)
     learningMentorDetails.innerHTML = `
@@ -910,6 +1368,61 @@ function playVideo(videoId, title) {
     
     // Trigger AI Content Generation
     generateAIContent(title);
+}
+
+function initYouTubePlayer(videoId) {
+    youtubePlayer = new YT.Player('yt-player', {
+        height: '100%',
+        width: '100%',
+        videoId: videoId,
+        playerVars: {
+            'autoplay': 1,
+            'rel': 0,
+            'modestbranding': 1
+        },
+        events: {
+            'onStateChange': onPlayerStateChange
+        }
+    });
+}
+
+function onPlayerStateChange(event) {
+    const progressBar = document.getElementById('video-progress-bar');
+    if (event.data == YT.PlayerState.PLAYING) {
+        if (progressBar) progressBar.classList.remove('paused');
+        if (progressInterval) clearInterval(progressInterval);
+        progressInterval = setInterval(() => {
+            if (youtubePlayer && youtubePlayer.getCurrentTime) {
+                const duration = youtubePlayer.getDuration();
+                const current = youtubePlayer.getCurrentTime();
+                const percentage = (current / duration) * 100;
+                if (progressBar) progressBar.style.width = `${percentage}%`;
+            }
+        }, 1000);
+    } else if (event.data == YT.PlayerState.ENDED) {
+        if (progressBar) {
+            progressBar.classList.add('paused');
+            progressBar.style.width = '100%';
+        }
+        if (progressInterval) clearInterval(progressInterval);
+        
+        // Reward Strike
+        userStrikes++;
+        const counter = document.getElementById('strike-count');
+        if (counter) {
+            counter.innerText = userStrikes;
+            // Celebration animation
+            counter.parentElement.style.transform = 'scale(1.1)';
+            counter.parentElement.style.boxShadow = '0 0 15px rgba(239, 68, 68, 0.5)';
+            setTimeout(() => {
+                counter.parentElement.style.transform = 'scale(1)';
+                counter.parentElement.style.boxShadow = 'none';
+            }, 300);
+        }
+    } else {
+        if (progressBar) progressBar.classList.add('paused');
+        if (progressInterval) clearInterval(progressInterval);
+    }
 }
 
 let currentQuizData = [];
@@ -1117,11 +1630,99 @@ function nextFlashcard(direction) {
     }, 150);
 }
 
+function navigateSidebar(viewId) {
+    // Clean up learning view if active
+    if (!learningView.classList.contains('hidden')) {
+        if (youtubePlayer) {
+            youtubePlayer.destroy();
+            youtubePlayer = null;
+        }
+        if (progressInterval) {
+            clearInterval(progressInterval);
+            progressInterval = null;
+        }
+        learningVideoContainer.innerHTML = '';
+        learningView.classList.add('hidden');
+    }
+    
+    // Hide all main views
+    dashboardView.classList.add('hidden');
+    document.getElementById('ai-results-page').classList.add('hidden');
+    const mentorView = document.getElementById('mentor-view');
+    if (mentorView) mentorView.classList.add('hidden');
+    const meetingView = document.getElementById('meeting-view');
+    if (meetingView) meetingView.classList.add('hidden');
+    const analyticsView = document.getElementById('analytics-view');
+    if (analyticsView) analyticsView.classList.add('hidden');
+    const pathsView = document.getElementById('paths-view');
+    if (pathsView) pathsView.classList.add('hidden');
+    const communityView = document.getElementById('community-view');
+    if (communityView) communityView.classList.add('hidden');
+    const askDoubtView = document.getElementById('ask-doubt-view');
+    if (askDoubtView) askDoubtView.classList.add('hidden');
+    
+    // Update active nav icons
+    const navDash = document.getElementById('nav-dashboard');
+    const navMentors = document.getElementById('nav-mentors');
+    const navAnalytics = document.getElementById('nav-analytics');
+    const navPaths = document.getElementById('nav-paths');
+    const navCommunity = document.getElementById('nav-community');
+    const navAskDoubt = document.getElementById('nav-ask-doubt');
+    if (navDash) navDash.classList.remove('active');
+    if (navMentors) navMentors.classList.remove('active');
+    if (navAnalytics) navAnalytics.classList.remove('active');
+    if (navPaths) navPaths.classList.remove('active');
+    if (navCommunity) navCommunity.classList.remove('active');
+    if (navAskDoubt) navAskDoubt.classList.remove('active');
+    
+    // Show requested view
+    if (viewId === 'dashboard') {
+        dashboardView.classList.remove('hidden');
+        if (navDash) navDash.classList.add('active');
+    } else if (viewId === 'mentors') {
+        if (mentorView) mentorView.classList.remove('hidden');
+        if (navMentors) navMentors.classList.add('active');
+    } else if (viewId === 'meeting') {
+        if (meetingView) meetingView.classList.remove('hidden');
+    } else if (viewId === 'analytics') {
+        if (analyticsView) analyticsView.classList.remove('hidden');
+        if (navAnalytics) navAnalytics.classList.add('active');
+        
+        // Update user name in analytics view
+        const analyticsName = document.getElementById('analytics-user-name');
+        if (analyticsName) {
+            analyticsName.innerText = (typeof studentData !== 'undefined' && studentData.name) ? studentData.name : 'Student';
+        }
+        
+        initAnalyticsChart();
+    } else if (viewId === 'paths') {
+        if (pathsView) pathsView.classList.remove('hidden');
+        if (navPaths) navPaths.classList.add('active');
+    } else if (viewId === 'community') {
+        if (communityView) communityView.classList.remove('hidden');
+        if (navCommunity) navCommunity.classList.add('active');
+        
+        // Update community avatar based on login data
+        const commAvatar = document.getElementById('community-user-avatar');
+        if (commAvatar && typeof userProfile !== 'undefined' && userProfile.avatar) {
+            commAvatar.src = userProfile.avatar;
+        }
+        
+        // Generate mock posts if not already done
+        const feed = document.getElementById('community-feed');
+        if (feed && feed.children.length === 0) {
+            generateCommunityPosts();
+        }
+    } else if (viewId === 'ask-doubt') {
+        if (askDoubtView) askDoubtView.classList.remove('hidden');
+        if (navAskDoubt) navAskDoubt.classList.add('active');
+    }
+    
+    window.scrollTo(0, 0);
+}
+
 function backToDashboard() {
-    learningView.classList.add('hidden');
-    learningVideoContainer.innerHTML = ''; // Stop video playback
-    dashboardView.classList.remove('hidden');
-    window.scrollTo(0,0);
+    navigateSidebar('dashboard');
 }
 
 // --- Interactive Hub Tab Logic ---
@@ -1200,3 +1801,317 @@ window.onload = () => {
         goToDashboard();
     }
 };
+
+// --- Analytics Chart Logic ---
+let analyticsChartInstance = null;
+function initAnalyticsChart() {
+    const ctx = document.getElementById('learningRadarChart');
+    if (!ctx) return;
+    
+    if (analyticsChartInstance) {
+        // Chart already initialized
+        return;
+    }
+    
+    if (typeof Chart === 'undefined') {
+        console.error("Chart.js not loaded yet.");
+        setTimeout(initAnalyticsChart, 500);
+        return;
+    }
+
+    analyticsChartInstance = new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: ['Client Management', 'Metrix', 'User Flow', 'User Research', 'Accessibility', 'Prototyping', 'Visual Design'],
+            datasets: [
+                {
+                    label: 'Achieved',
+                    data: [85, 90, 75, 80, 85, 90, 95],
+                    borderColor: '#4ade80',
+                    backgroundColor: 'rgba(74, 222, 128, 0.1)',
+                    pointBackgroundColor: '#4ade80',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: '#4ade80',
+                    borderWidth: 2
+                },
+                {
+                    label: 'Progressing',
+                    data: [70, 75, 65, 85, 60, 75, 70],
+                    borderColor: '#facc15',
+                    backgroundColor: 'rgba(250, 204, 21, 0.1)',
+                    pointBackgroundColor: '#facc15',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: '#facc15',
+                    borderWidth: 2
+                },
+                {
+                    label: 'Want Learn',
+                    data: [50, 60, 85, 55, 75, 50, 60],
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    pointBackgroundColor: '#3b82f6',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: '#3b82f6',
+                    borderWidth: 2
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                r: {
+                    angleLines: {
+                        color: 'rgba(0, 0, 0, 0.1)'
+                    },
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.1)'
+                    },
+                    pointLabels: {
+                        font: {
+                            size: 11,
+                            family: 'Inter, sans-serif'
+                        },
+                        color: '#64748b'
+                    },
+                    ticks: {
+                        display: false,
+                        min: 0,
+                        max: 100
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false // We built a custom legend in HTML
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                    titleFont: { family: 'Inter, sans-serif' },
+                    bodyFont: { family: 'Inter, sans-serif' },
+                    padding: 12,
+                    cornerRadius: 8
+                }
+            }
+        }
+    });
+}
+
+// --- Community Logic ---
+function submitCommunityPost() {
+    const input = document.getElementById('community-post-input');
+    const feed = document.getElementById('community-feed');
+    const content = input.value.trim();
+    
+    if (!content) return;
+    
+    const userName = (typeof studentData !== 'undefined' && studentData.name) ? studentData.name : 'You';
+    const userRole = (typeof studentData !== 'undefined' && studentData.role) ? studentData.role : 'Student';
+    const avatar = (typeof userProfile !== 'undefined' && userProfile.avatar) ? userProfile.avatar : 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&backgroundColor=b6e3f4';
+    
+    const postHTML = `
+        <div class="post-card" style="animation: slideInBottom 0.5s ease forwards;">
+            <div class="post-header">
+                <div class="post-author">
+                    <img src="${avatar}" alt="User">
+                    <div>
+                        <h4>${userName}</h4>
+                        <p>${userRole}</p>
+                    </div>
+                </div>
+                <div class="post-time">Just now</div>
+            </div>
+            <div class="post-content">
+                ${content.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
+            </div>
+            <div class="post-actions">
+                <button class="post-action-btn"><i class="ph ph-heart"></i> 0</button>
+                <button class="post-action-btn"><i class="ph ph-chat-circle"></i> 0 Comments</button>
+                <button class="post-action-btn"><i class="ph ph-share-network"></i> Share</button>
+            </div>
+        </div>
+    `;
+    
+    feed.insertAdjacentHTML('afterbegin', postHTML);
+    input.value = '';
+}
+
+function generateCommunityPosts() {
+    const feed = document.getElementById('community-feed');
+    if (!feed) return;
+    
+    const firstNames = ['Rahul', 'Priya', 'Amit', 'Neha', 'Rohan', 'Sneha', 'Vikram', 'Pooja', 'Karan', 'Anjali', 'Arjun', 'Shruti', 'Aditya', 'Kavya', 'Siddharth'];
+    const lastNames = ['Sharma', 'Singh', 'Patel', 'Kumar', 'Gupta', 'Verma', 'Reddy', 'Das', 'Jain', 'Mehta', 'Choudhury', 'Iyer', 'Nair'];
+    const roles = ['Frontend Developer', 'Backend Engineer', 'Data Scientist', 'Student', 'UI/UX Designer', 'Cloud Architect', 'Full Stack Dev'];
+    const templates = [
+        {
+            content: "Does anyone have a good pattern for handling complex state in React without using Redux? I'm trying to rely solely on the Context API but it's getting messy.",
+            code: "const AppContext = createContext();\nexport const AppProvider = ({ children }) => {\n  const [user, setUser] = useState(null);\n  // 10 more states here...\n}",
+            tags: ["#ReactJS", "#StateManagement"]
+        },
+        {
+            content: "Just completed the 'Advanced Machine Learning' module! 🚀 Massive thanks to the community for helping me understand Neural Networks intuitively.",
+            code: null,
+            tags: ["#MachineLearning", "#Achievement"]
+        },
+        {
+            content: "What's the best way to scale a Node.js Express app? I'm using PM2 but wondering if I should switch to Docker and Kubernetes for better orchestration.",
+            code: null,
+            tags: ["#NodeJS", "#DevOps", "#Backend"]
+        },
+        {
+            content: "I keep getting a CORS error when my React frontend tries to hit my Python Flask backend. Both are running on localhost but different ports.",
+            code: "Access to fetch at 'http://localhost:5000/api/data' from origin 'http://localhost:3000' has been blocked by CORS policy.",
+            tags: ["#Flask", "#CORS", "#Frontend"]
+        },
+        {
+            content: "Can someone review my system design architecture for a URL shortener? I am planning to use Redis for caching and MongoDB for persistence.",
+            code: null,
+            tags: ["#SystemDesign", "#Architecture"]
+        },
+        {
+            content: "What is the time complexity of Array.prototype.sort() in JavaScript V8 engine? Is it always O(n log n)?",
+            code: null,
+            tags: ["#JavaScript", "#DSA"]
+        }
+    ];
+
+    let htmlBuffer = '';
+    
+    for (let i = 0; i < 205; i++) {
+        const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+        const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+        const role = roles[Math.floor(Math.random() * roles.length)];
+        const seed = `${firstName}${lastName}${i}`;
+        const avatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${seed}&backgroundColor=${['b6e3f4','ffdfbf','c0aede','fef08a','fed7aa'][i%5]}`;
+        
+        const template = templates[Math.floor(Math.random() * templates.length)];
+        const likes = Math.floor(Math.random() * 500);
+        const comments = Math.floor(Math.random() * 50);
+        const hoursAgo = Math.floor(Math.random() * 48) + 1;
+        
+        const codeHTML = template.code ? `<div class="post-code-snippet">${template.code.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>` : '';
+        const tagsHTML = `<div class="post-tags">${template.tags.map(t => `<span class="post-tag">${t}</span>`).join('')}</div>`;
+        
+        htmlBuffer += `
+            <div class="post-card">
+                <div class="post-header">
+                    <div class="post-author">
+                        <img src="${avatar}" alt="User">
+                        <div>
+                            <h4>${firstName} ${lastName}</h4>
+                            <p>${role}</p>
+                        </div>
+                    </div>
+                    <div class="post-time">${hoursAgo} hours ago</div>
+                </div>
+                <div class="post-content">
+                    ${template.content}
+                </div>
+                ${codeHTML}
+                ${tagsHTML}
+                <div class="post-actions">
+                    <button class="post-action-btn"><i class="ph ph-heart"></i> ${likes}</button>
+                    <button class="post-action-btn"><i class="ph ph-chat-circle"></i> ${comments} Comments</button>
+                    <button class="post-action-btn"><i class="ph ph-share-network"></i> Share</button>
+                </div>
+            </div>
+        `;
+    }
+    
+    feed.innerHTML = htmlBuffer;
+}
+
+let selectedDoubtTopic = 'React';
+function selectDoubtTopic(element, topic) {
+    const pills = document.getElementById('doubt-topic-pills').children;
+    for (let i = 0; i < pills.length; i++) {
+        pills[i].classList.remove('active');
+    }
+    element.classList.add('active');
+    selectedDoubtTopic = topic;
+}
+
+async function submitAIDoubt() {
+    const textarea = document.getElementById('ai-doubt-textarea');
+    const text = textarea.value.trim();
+    if (!text) {
+        alert("Please enter a question first.");
+        return;
+    }
+
+    const responseArea = document.getElementById('ai-doubt-response-area');
+    const skeleton = document.getElementById('ai-doubt-skeleton');
+    const finalResponse = document.getElementById('ai-doubt-final');
+    const answerText = document.getElementById('ai-doubt-answer-text');
+    const videoCard = document.getElementById('ai-doubt-video-card');
+    const videoTitle = document.getElementById('ai-doubt-video-title');
+    const videoThumb = videoCard.querySelector('.video-thumb');
+
+    // Show skeleton loader
+    responseArea.classList.remove('hidden');
+    skeleton.classList.remove('hidden');
+    finalResponse.classList.add('hidden');
+
+    try {
+        const studentName = (typeof studentData !== 'undefined' && studentData.name) ? studentData.name : 'Student';
+        const studentArchetype = (typeof userProfile !== 'undefined' && userProfile.archetype) ? userProfile.archetype : 'Beginner';
+        
+        const prompt = `You are a helpful and expert AI programming tutor. A student named "${studentName}" (who has a "${studentArchetype}" learning style/level) asks a doubt regarding the topic "${selectedDoubtTopic}": "${text}". Provide a direct, accurate, and easy-to-understand 2-3 paragraph explanation. 
+        
+IMPORTANT: 
+- Start your response by greeting the student personally (e.g., "Hi ${studentName}, ...").
+- Tailor your explanation specifically for a ${studentArchetype} learner.
+- You MUST respond in pure JSON format containing exactly these three keys:
+1. "answer": The HTML formatted explanation using ONLY <p> tags.
+2. "videoTitle": The title of a real, highly relevant YouTube tutorial that answers this exact doubt.
+3. "videoId": The exact 11-character YouTube Video ID for that tutorial.`;
+        
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${GEMINI_API_KEY}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                contents: [{ parts: [{ text: prompt }] }],
+                generationConfig: { responseMimeType: "application/json" }
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.error) throw new Error(data.error.message);
+        if (!data.candidates || !data.candidates[0].content) throw new Error("Invalid AI response");
+        
+        let jsonText = data.candidates[0].content.parts[0].text.trim();
+        if (jsonText.startsWith('```json')) jsonText = jsonText.substring(7);
+        if (jsonText.startsWith('```')) jsonText = jsonText.substring(3);
+        if (jsonText.endsWith('```')) jsonText = jsonText.slice(0, -3);
+        
+        const aiData = JSON.parse(jsonText.trim());
+        
+        answerText.innerHTML = aiData.answer;
+        
+        // Dynamic Video Injection
+        const vidId = aiData.videoId || 'dQw4w9WgXcQ';
+        const vidTitle = aiData.videoTitle || 'Recommended Tutorial';
+        
+        videoTitle.innerText = vidTitle;
+        videoThumb.src = `https://img.youtube.com/vi/${vidId}/mqdefault.jpg`;
+        videoCard.setAttribute("onclick", `playVideo('${vidId}', '${vidTitle.replace(/'/g, "\\'")}')`);
+
+    } catch (error) {
+        console.error("Gemini API Error:", error);
+        answerText.innerHTML = `<p style="color: #ef4444;">Error: Could not fetch response from Gemini AI. Please ensure your API key is correct.</p>`;
+        
+        // Fallback for errors
+        videoTitle.innerText = "Error: Video Not Found";
+        videoThumb.src = "https://img.youtube.com/vi/dQw4w9WgXcQ/mqdefault.jpg"; 
+        videoCard.setAttribute("onclick", "alert('API Error - Cannot load video.')");
+    }
+    
+    // Hide skeleton and show response
+    skeleton.classList.add('hidden');
+    finalResponse.classList.remove('hidden');
+}

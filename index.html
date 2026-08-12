@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=2">
 </head>
 <body>
     <!-- Premium Global Top Ticker -->
@@ -26,18 +26,22 @@
     <!-- Fixed Dashboard Sidebar (Premium App Style) -->
     <aside class="fixed-sidebar hidden" id="fixed-sidebar">
         <div class="sidebar-top">
-            <div class="logo-icon"><i class="ph-fill ph-student"></i></div>
-            <nav class="sidebar-nav-icons">
-                <a href="javascript:void(0)" class="active" title="Dashboard"><i class="ph-fill ph-squares-four"></i></a>
-                <a href="javascript:void(0)" title="Analytics"><i class="ph ph-chart-bar"></i></a>
-                <a href="javascript:void(0)" title="Learning Paths"><i class="ph ph-books"></i></a>
-                <a href="javascript:void(0)" title="Mentors"><i class="ph ph-chalkboard-teacher"></i></a>
-                <a href="javascript:void(0)" title="Community"><i class="ph ph-users"></i></a>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                <div class="logo-icon"><i class="ph-fill ph-student"></i></div>
+            </div>
+            
+            <nav class="sidebar-nav-icons" style="margin-top: 1rem;">
+                <a href="javascript:void(0)" class="active nav-tooltip" data-title="Dashboard" id="nav-dashboard" onclick="navigateSidebar('dashboard')"><i class="ph-fill ph-squares-four"></i></a>
+                <a href="javascript:void(0)" class="nav-tooltip" data-title="Analytics" id="nav-analytics" onclick="navigateSidebar('analytics')"><i class="ph ph-chart-bar"></i></a>
+                <a href="javascript:void(0)" class="nav-tooltip" data-title="Ask Doubt (AI)" id="nav-ask-doubt" onclick="navigateSidebar('ask-doubt')"><i class="ph ph-brain"></i></a>
+                <a href="javascript:void(0)" class="nav-tooltip" data-title="Learning Paths" id="nav-paths" onclick="navigateSidebar('paths')"><i class="ph ph-books"></i></a>
+                <a href="javascript:void(0)" class="nav-tooltip" data-title="Mentors" id="nav-mentors" onclick="navigateSidebar('mentors')"><i class="ph ph-chalkboard-teacher"></i></a>
+                <a href="javascript:void(0)" class="nav-tooltip" data-title="Community" id="nav-community" onclick="navigateSidebar('community')"><i class="ph ph-users"></i></a>
             </nav>
         </div>
         <div class="sidebar-bottom">
-            <a href="javascript:void(0)" title="Settings" onclick="openProfileModal()"><i class="ph ph-gear"></i></a>
-            <div class="user-avatar" onclick="openProfileModal()" title="Profile & Settings" style="cursor:pointer;"><i class="ph-fill ph-user"></i></div>
+            <a href="javascript:void(0)" class="nav-tooltip" data-title="Settings" onclick="openProfileModal()"><i class="ph ph-gear"></i></a>
+            <div class="user-avatar nav-tooltip" data-title="Profile" onclick="openProfileModal()" style="cursor:pointer;"><img src="" id="sidebar-bottom-avatar" alt="" style="width:100%; height:100%; border-radius:50%; display:none;"><i class="ph-fill ph-user" id="sidebar-bottom-icon"></i></div>
         </div>
     </aside>
     <nav class="navbar" id="main-nav">
@@ -56,6 +60,36 @@
             <div class="nav-actions" id="nav-public-actions">
                 <a href="javascript:void(0)" class="btn-ghost" onclick="selectRole('faculty')">Institute Login</a>
                 <a href="javascript:void(0)" class="btn-primary small" onclick="showRoleSelection()">Student Registration</a>
+            </div>
+
+            <!-- Dashboard Nav Actions (Premium Modern Style) -->
+            <div class="nav-actions" id="nav-dashboard-actions" style="display: none; align-items: center; gap: 1.5rem;">
+                <div style="display: flex; align-items: center; gap: 1rem; background: rgba(255, 255, 255, 0.7); padding: 0.4rem 1rem; border-radius: 30px; box-shadow: inset 0 2px 4px rgba(255,255,255,0.8), 0 4px 15px rgba(0,0,0,0.05); border: 1px solid rgba(255,255,255,0.5); backdrop-filter: blur(10px);">
+                    <!-- Fire Icon Streak -->
+                    <div style="display: flex; align-items: center; gap: 0.4rem; color: #f97316; font-weight: 700;" title="Learning Streak">
+                        <i class="ph-fill ph-fire" style="font-size: 1.25rem; filter: drop-shadow(0 0 5px rgba(249,115,22,0.4));"></i>
+                        <span>12 Day Streak</span>
+                    </div>
+                    <!-- Divider -->
+                    <div style="width: 1px; height: 20px; background: #cbd5e1;"></div>
+                    <!-- Learning Hours -->
+                    <div style="display: flex; align-items: center; gap: 0.4rem; color: #3b82f6; font-weight: 700;" title="Today's Learning">
+                        <i class="ph-fill ph-clock" style="font-size: 1.25rem; filter: drop-shadow(0 0 5px rgba(59,130,246,0.4));"></i>
+                        <span>2.5h Today</span>
+                    </div>
+                </div>
+                
+                <!-- Profile Avatar in Header -->
+                <div style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; padding: 0.25rem 0.5rem; border-radius: 30px; transition: background 0.2s;" onclick="openProfileModal()" onmouseover="this.style.background='rgba(0,0,0,0.05)'" onmouseout="this.style.background='transparent'">
+                    <div style="text-align: right;">
+                        <div style="font-size: 0.85rem; font-weight: 700; color: #0f172a;" id="header-profile-name">Student</div>
+                        <div style="font-size: 0.7rem; font-weight: 700; color: #f59e0b; text-transform: uppercase; letter-spacing: 0.5px;">Premium</div>
+                    </div>
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #3b82f6; border: 2px solid #38bdf8; overflow: hidden; display: flex; justify-content: center; align-items: center; color: white; box-shadow: 0 4px 10px rgba(56,189,248,0.3);">
+                        <img id="header-profile-avatar" src="" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                        <i class="ph-fill ph-user" id="header-profile-fallback" style="font-size: 1.25rem;"></i>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
@@ -680,14 +714,29 @@
                         <button class="premium-topic-chip" onclick="setSearch('Machine Learning')">
                             <i class="ph-fill ph-robot" style="color: #ec4899;"></i> Machine Learning
                         </button>
+                        <button class="premium-topic-chip" onclick="setSearch('Generative AI')">
+                            <i class="ph-fill ph-brain" style="color: #8b5cf6;"></i> Generative AI
+                        </button>
                         <button class="premium-topic-chip" onclick="setSearch('System Design')">
                             <i class="ph-fill ph-hard-drives" style="color: #14b8a6;"></i> System Design
+                        </button>
+                        <button class="premium-topic-chip" onclick="setSearch('Cloud Computing')">
+                            <i class="ph-fill ph-cloud" style="color: #38bdf8;"></i> Cloud Computing
                         </button>
                         <button class="premium-topic-chip" onclick="setSearch('Full-Stack React')">
                             <i class="ph-fill ph-atom" style="color: #0ea5e9;"></i> Full-Stack React
                         </button>
+                        <button class="premium-topic-chip" onclick="setSearch('Cybersecurity')">
+                            <i class="ph-fill ph-shield-check" style="color: #ef4444;"></i> Cybersecurity
+                        </button>
+                        <button class="premium-topic-chip" onclick="setSearch('UI/UX Design')">
+                            <i class="ph-fill ph-bezier-curve" style="color: #f43f5e;"></i> UI/UX Design
+                        </button>
                         <button class="premium-topic-chip" onclick="setSearch('IELTS Prep')">
                             <i class="ph-fill ph-translate" style="color: #f59e0b;"></i> IELTS Prep
+                        </button>
+                        <button class="premium-topic-chip" onclick="setSearch('Product Management')">
+                            <i class="ph-fill ph-chart-line-up" style="color: #10b981;"></i> Product Management
                         </button>
                         <button class="premium-topic-chip" onclick="setSearch('UI/UX Design')">
                             <i class="ph-fill ph-pen-nib" style="color: #8b5cf6;"></i> UI/UX Design
@@ -734,16 +783,22 @@
         <div class="learning-header">
             <button class="btn-secondary" onclick="backToDashboard()"><i class="ph ph-arrow-left"></i> Return to Modules</button>
             <h2 id="learning-topic-title" class="learning-title">Module Title</h2>
-            <div style="width: 160px;"></div> <!-- Spacer for flex alignment -->
+            <div style="display: flex; align-items: center; gap: 0.5rem; background: rgba(239, 68, 68, 0.1); padding: 0.5rem 1rem; border-radius: 20px; border: 1px solid rgba(239, 68, 68, 0.2);">
+                <i class="ph-fill ph-fire" style="color: #ef4444; font-size: 1.2rem;"></i>
+                <span style="font-weight: 700; color: #ef4444;">Strikes: <span id="strike-count">0</span></span>
+            </div>
         </div>
 
         <div class="learning-content-wrapper">
             <!-- Left Column: Video & Interactive Hub -->
             <div class="learning-main">
                 <!-- Video Player -->
-                <div class="video-container-wrapper">
-                    <div id="learning-video-container" class="video-responsive">
-                        <!-- Iframe injected via JS -->
+                <div class="video-container-wrapper" style="margin-bottom: 0;">
+                    <div id="learning-video-container" class="video-responsive" style="border-bottom-left-radius: 0; border-bottom-right-radius: 0;">
+                        <div id="yt-player"></div>
+                    </div>
+                    <div class="video-progress-container" style="width: 100%; height: 8px; background: #e2e8f0; border-radius: 0 0 16px 16px; overflow: hidden; display: flex;">
+                        <div id="video-progress-bar" class="progress-burn paused" style="width: 0%; height: 100%;"></div>
                     </div>
                 </div>
 
@@ -836,7 +891,7 @@
             <div class="learning-sidebar">
                 <div class="mentor-connect-panel">
                     <div class="panel-header">
-                        <i class="ph-fill ph-chalkboard-teacher" style="color: var(--accent-primary);"></i> Faculty Office Hours
+                        <i class="ph-fill ph-chalkboard-teacher" style="color: var(--accent-primary);"></i> Connect with Mentor
                     </div>
                     
                     <!-- Mentor Details injected via JS -->
@@ -844,8 +899,8 @@
                         <!-- Mock content will be replaced by JS -->
                     </div>
 
-                    <p class="mentor-context">Based on your recent assessment, a 15-minute consultation is recommended to resolve conceptual blockers.</p>
-                    <button class="btn-primary block">Schedule Office Hour <i class="ph ph-calendar-plus"></i></button>
+                    <p class="mentor-context">Have a doubt? Connect with your mentor for a quick 1:1 session to clear your concepts.</p>
+                    <button class="btn-primary block" id="btn-doubt-connect" onclick="openDoubtModal()">Connect for Doubt <i class="ph ph-video-camera"></i></button>
                 </div>
             </div>
         </div>
@@ -929,7 +984,545 @@
         </div>
     </main>
 
+    <!-- Mentor Hub View -->
+    <main class="mentor-section hidden" id="mentor-view" style="margin-left: 80px; padding: 2rem 5%; min-height: 100vh; position: relative;">
+        <div class="mentors-grid" id="mentors-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; padding-bottom: 5rem;">
+            <!-- Mentors injected dynamically via JS -->
+        </div>
+        
+        <!-- Floating Connect Button (Hidden initially) -->
+        <div id="floating-connect-bar" class="hidden" style="position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: var(--bg-surface-elevated); padding: 1rem 2rem; border-radius: 50px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 1.5rem; z-index: 1000; border: 1px solid var(--border-color);">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <img id="fc-avatar" src="" style="width: 40px; height: 40px; border-radius: 50%;">
+                <div>
+                    <p style="margin: 0; font-size: 0.8rem; color: var(--text-secondary);">Selected Mentor</p>
+                    <p id="fc-name" style="margin: 0; font-weight: 600; color: var(--text-primary);"></p>
+                </div>
+            </div>
+            <button class="btn-primary" onclick="startMeetingSession()">Start Live Session <i class="ph ph-video-camera"></i></button>
+        </div>
+    </main>
+
+    <!-- Meeting View Prototype -->
+    <main class="meeting-section hidden" id="meeting-view" style="margin-left: 80px; height: 100vh; background: #000; position: relative; overflow: hidden; display: flex; flex-direction: column;">
+        <!-- Header -->
+        <div style="padding: 1rem 2rem; background: rgba(0,0,0,0.8); display: flex; justify-content: space-between; align-items: center; z-index: 10;">
+            <div style="color: white; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="ph-fill ph-lock-key" style="color: #4ade80;"></i> End-to-End Encrypted Session
+            </div>
+            <div id="meeting-timer" style="color: white; font-variant-numeric: tabular-nums;">00:00</div>
+        </div>
+        
+        <!-- Video Container -->
+        <div style="flex: 1; position: relative; display: flex; justify-content: center; align-items: center;">
+            <!-- Self Video (Main) -->
+            <video id="self-video" autoplay playsinline muted style="width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); opacity: 0; transition: opacity 0.5s ease;"></video>
+            
+            <!-- Start Camera Button Overlay -->
+            <div id="start-camera-overlay" style="position: absolute; text-align: center;">
+                <div style="width: 80px; height: 80px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; justify-content: center; align-items: center; margin: 0 auto 1rem auto; font-size: 2.5rem; color: white;">
+                    <i class="ph ph-video-camera-slash"></i>
+                </div>
+                <h2 style="color: white; margin-bottom: 1.5rem;">Camera is off</h2>
+                <button class="btn-primary" onclick="startWebCam()">Turn on Camera</button>
+            </div>
+            
+            <!-- Mentor PiP -->
+            <div id="mentor-pip" style="position: absolute; bottom: 2rem; right: 2rem; width: 200px; height: 150px; background: #1e293b; border-radius: 12px; border: 2px solid rgba(255,255,255,0.2); overflow: hidden; display: flex; justify-content: center; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+                <img id="pip-avatar" src="" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.7);">
+                <div style="position: absolute; bottom: 0.5rem; left: 0.5rem; color: white; font-size: 0.75rem; background: rgba(0,0,0,0.5); padding: 0.2rem 0.5rem; border-radius: 4px;" id="pip-name">Mentor</div>
+            </div>
+            
+            <!-- Waiting Room Overlay -->
+            <div id="waiting-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 20; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                <div class="ai-spinner" style="margin-bottom: 2rem;">
+                    <div class="spinner-ring" style="border-width: 4px; width: 80px; height: 80px;"></div>
+                </div>
+                <h2 style="color: white; font-size: 1.5rem; font-weight: 500; margin: 0 0 1rem 0;">Waiting for host to start this meeting...</h2>
+                <p style="color: #94a3b8; font-size: 1rem; margin: 0;">Faculty is joining the session.</p>
+            </div>
+            
+            <!-- Live Captions Overlay -->
+            <div id="live-captions" class="hidden" style="position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); width: 80%; max-width: 800px; text-align: center; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); padding: 1rem 2rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+                <p id="caption-speaker" style="margin: 0 0 0.25rem 0; font-size: 0.8rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Mentor</p>
+                <p id="caption-text" style="margin: 0; font-size: 1.25rem; color: white; line-height: 1.5; font-weight: 500;">...</p>
+            </div>
+        </div>
+        
+        <!-- Controls Bar -->
+        <div style="padding: 1.5rem; background: #111827; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 1.5rem; z-index: 10;">
+            <button id="btn-mic" onclick="startVoiceInteraction()" style="width: 50px; height: 50px; border-radius: 50%; border: none; background: #374151; color: white; font-size: 1.25rem; cursor: pointer; transition: all 0.2s ease;" title="Talk to Mentor"><i class="ph ph-microphone"></i></button>
+            <button style="width: 50px; height: 50px; border-radius: 50%; border: none; background: #374151; color: white; font-size: 1.25rem; cursor: pointer;"><i class="ph ph-video-camera"></i></button>
+            <button style="width: 50px; height: 50px; border-radius: 50%; border: none; background: #374151; color: white; font-size: 1.25rem; cursor: pointer;"><i class="ph ph-monitor-arrow-up"></i></button>
+            <button style="width: 50px; height: 50px; border-radius: 50%; border: none; background: #374151; color: white; font-size: 1.25rem; cursor: pointer;"><i class="ph ph-smiley"></i></button>
+            <button style="padding: 0 1.5rem; height: 50px; border-radius: 25px; border: none; background: #ef4444; color: white; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; margin-left: auto;" onclick="endCall()"><i class="ph-fill ph-phone-x"></i> End Meeting</button>
+        </div>
+    </main>
+
+    <!-- Premium Analytics View -->
+    <main class="analytics-section hidden" id="analytics-view" style="margin-left: 80px; padding: 2rem 5%; min-height: 100vh; background: #f8fafc;">
+        <div class="analytics-grid">
+            <!-- Top Left: User Premium Card (4 cols) -->
+            <div class="panel-card user-card-premium" style="grid-column: span 4;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; position: relative; z-index: 2;">
+                    <span style="font-size: 0.8rem; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; background: rgba(255,255,255,0.2); padding: 0.2rem 0.6rem; border-radius: 12px;">Premium Member</span>
+                    <i class="ph ph-dots-three-vertical" style="font-size: 1.5rem; cursor: pointer;"></i>
+                </div>
+                
+                <div class="avatar-ring">
+                    <svg><circle cx="60" cy="60" r="56"></circle><circle class="progress" cx="60" cy="60" r="56"></circle></svg>
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&backgroundColor=b6e3f4" alt="User">
+                </div>
+                
+                <h2 id="analytics-user-name" style="margin: 0 0 0.25rem 0; font-size: 1.5rem; position: relative; z-index: 2;">Student</h2>
+                <p style="margin: 0; font-size: 0.9rem; opacity: 0.9; position: relative; z-index: 2;">Senior Software Engineer</p>
+                
+                <div class="stats-row" style="position: relative; z-index: 2;">
+                    <div class="stat-item">
+                        <h4>Technical</h4>
+                        <p>86%</p>
+                    </div>
+                    <div class="stat-item">
+                        <h4>Soft Skills</h4>
+                        <p>92%</p>
+                    </div>
+                    <div class="stat-item">
+                        <h4>Experience</h4>
+                        <p>8 yrs</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Right: Radar Chart (8 cols) -->
+            <div class="panel-card" style="grid-column: span 8;">
+                <h3 style="margin: 0 0 1.5rem 0; display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem; color: var(--text-primary);">
+                    Learning Time <i class="ph-fill ph-info" style="color: var(--text-muted); font-size: 1rem;"></i>
+                </h3>
+                <div style="display: flex; height: 350px;">
+                    <div style="flex: 1; position: relative;">
+                        <canvas id="learningRadarChart"></canvas>
+                    </div>
+                    <div style="width: 200px; padding-left: 2rem; display: flex; flex-direction: column; justify-content: center; gap: 1rem;">
+                        <h4 style="margin: 0; font-size: 0.9rem; color: var(--text-primary);">Legend</h4>
+                        <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-secondary);"><i class="ph-fill ph-check-circle" style="color: #4ade80;"></i> Competent</div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-secondary);"><i class="ph-fill ph-check-circle" style="color: #10b981;"></i> Proficient</div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-secondary);"><i class="ph-fill ph-star" style="color: #facc15;"></i> Expert</div>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 1.5rem; margin-top: 1rem; font-size: 0.8rem;">
+                    <span style="display: flex; align-items: center; gap: 0.25rem;"><span style="width: 12px; height: 4px; background: #4ade80; border-radius: 2px;"></span> Achieved</span>
+                    <span style="display: flex; align-items: center; gap: 0.25rem;"><span style="width: 12px; height: 4px; background: #facc15; border-radius: 2px;"></span> Progressing</span>
+                    <span style="display: flex; align-items: center; gap: 0.25rem;"><span style="width: 12px; height: 4px; background: #3b82f6; border-radius: 2px;"></span> Want Learn</span>
+                </div>
+            </div>
+
+            <!-- Bottom Left: Learning History (5 cols) -->
+            <div class="panel-card" style="grid-column: span 5;">
+                <h3 style="margin: 0 0 1rem 0; display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem; color: var(--text-primary);">
+                    Learning History <i class="ph-fill ph-info" style="color: var(--text-muted); font-size: 1rem;"></i>
+                </h3>
+                <table class="minimal-table">
+                    <thead>
+                        <tr>
+                            <th>Course</th>
+                            <th>Certification</th>
+                            <th style="text-align: right;">Duration</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>System Design Basics</td>
+                            <td class="cert-no">-</td>
+                            <td style="text-align: right; font-weight: 500;">16.5h</td>
+                        </tr>
+                        <tr>
+                            <td>Advanced Algorithms</td>
+                            <td class="cert-yes">Yes</td>
+                            <td style="text-align: right; font-weight: 500;">12h</td>
+                        </tr>
+                        <tr>
+                            <td>Cloud Architecture</td>
+                            <td class="cert-no">-</td>
+                            <td style="text-align: right; font-weight: 500;">3.5h</td>
+                        </tr>
+                        <tr>
+                            <td>Machine Learning</td>
+                            <td class="cert-yes">Yes</td>
+                            <td style="text-align: right; font-weight: 500;">24.5h</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Bottom Middle: Achievements (4 cols) -->
+            <div class="panel-card" style="grid-column: span 4;">
+                <h3 style="margin: 0 0 1.5rem 0; display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem; color: var(--text-primary);">
+                    Achievements <i class="ph-fill ph-info" style="color: var(--text-muted); font-size: 1rem;"></i>
+                </h3>
+                <div class="achievement-row">
+                    <div class="badge-icon" style="background: rgba(250, 204, 21, 0.2); color: #facc15;"><i class="ph-fill ph-medal"></i></div>
+                    <div class="prog-container">
+                        <div class="prog-header"><span>Learning master</span><span>4/5</span></div>
+                        <div class="prog-track"><div class="prog-fill" style="width: 80%; background: #facc15;"></div></div>
+                    </div>
+                </div>
+                <div class="achievement-row">
+                    <div class="badge-icon" style="background: rgba(148, 163, 184, 0.2); color: #94a3b8;"><i class="ph-fill ph-medal"></i></div>
+                    <div class="prog-container">
+                        <div class="prog-header"><span>Skill Builder</span><span>1/5</span></div>
+                        <div class="prog-track"><div class="prog-fill" style="width: 20%; background: #94a3b8;"></div></div>
+                    </div>
+                </div>
+                <div class="achievement-row">
+                    <div class="badge-icon" style="background: rgba(74, 222, 128, 0.2); color: #4ade80;"><i class="ph-fill ph-medal"></i></div>
+                    <div class="prog-container">
+                        <div class="prog-header"><span>Leadership</span><span>2/2</span></div>
+                        <div class="prog-track"><div class="prog-fill" style="width: 100%; background: #4ade80;"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Right: Statistics (3 cols) -->
+            <div class="panel-card" style="grid-column: span 3;">
+                <h3 style="margin: 0 0 1rem 0; display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem; color: var(--text-primary);">
+                    Learning Statistic <i class="ph-fill ph-info" style="color: var(--text-muted); font-size: 1rem;"></i>
+                </h3>
+                <div class="stat-list-row">
+                    <div class="stat-label"><i class="ph ph-hourglass"></i> Total learning hours</div>
+                    <div class="stat-value">254</div>
+                </div>
+                <div class="stat-list-row">
+                    <div class="stat-label"><i class="ph ph-certificate"></i> Certificates completed</div>
+                    <div class="stat-value">8</div>
+                </div>
+                <div class="stat-list-row">
+                    <div class="stat-label"><i class="ph ph-laptop"></i> Hands-on practice</div>
+                    <div class="stat-value">14</div>
+                </div>
+                <div class="stat-list-row">
+                    <div class="stat-label"><i class="ph ph-check-circle"></i> Courses completed</div>
+                    <div class="stat-value">12</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Premium Learning Paths View -->
+    <main class="paths-section hidden" id="paths-view" style="margin-left: 80px; padding: 2rem 5%; min-height: 100vh; background: #f8fafc;">
+        <div class="paths-header-container">
+            <div>
+                <h1 style="margin: 0 0 0.5rem 0; font-size: 2.2rem; font-weight: 700; color: var(--text-primary);">Career Paths</h1>
+                <p style="margin: 0; color: var(--text-secondary); font-size: 1.1rem;">Curated journeys to master in-demand industry skills.</p>
+            </div>
+            <div style="position: relative;">
+                <i class="ph ph-magnifying-glass" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 1.25rem;"></i>
+                <input type="text" placeholder="Search careers..." style="padding: 0.8rem 1rem 0.8rem 2.75rem; border-radius: 20px; border: 1px solid var(--border-color); background: var(--bg-surface); width: 250px; outline: none; font-family: inherit;">
+            </div>
+        </div>
+
+        <div class="paths-grid">
+            <!-- Path 1 -->
+            <div class="path-card">
+                <div>
+                    <div class="path-tag" style="background: rgba(14, 165, 233, 0.1); color: #0ea5e9;">Featured Path</div>
+                    <div class="path-icon-wrapper" style="background: linear-gradient(135deg, #38bdf8, #0ea5e9); color: white;">
+                        <i class="ph-fill ph-code-block"></i>
+                    </div>
+                    <h3>Full-Stack AI Developer</h3>
+                    <p>Master front-end, back-end, and integrate powerful AI models into modern web applications.</p>
+                </div>
+                <div>
+                    <div class="path-stats">
+                        <div class="path-stat-item"><i class="ph ph-stack"></i> 12 Modules</div>
+                        <div class="path-stat-item"><i class="ph ph-clock"></i> 120 Hours</div>
+                    </div>
+                    <button class="btn-start-path" onclick="alert('Enrolled Successfully in Full-Stack AI Developer!')">
+                        Start Path <i class="ph-bold ph-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Path 2 -->
+            <div class="path-card">
+                <div>
+                    <div class="path-tag" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6;">High Demand</div>
+                    <div class="path-icon-wrapper" style="background: linear-gradient(135deg, #a78bfa, #8b5cf6); color: white;">
+                        <i class="ph-fill ph-chart-scatter"></i>
+                    </div>
+                    <h3>Data Science & ML</h3>
+                    <p>Learn Python, data visualization, and build predictive machine learning models from scratch.</p>
+                </div>
+                <div>
+                    <div class="path-stats">
+                        <div class="path-stat-item"><i class="ph ph-stack"></i> 15 Modules</div>
+                        <div class="path-stat-item"><i class="ph ph-clock"></i> 145 Hours</div>
+                    </div>
+                    <button class="btn-start-path" onclick="alert('Enrolled Successfully in Data Science & ML!')">
+                        Start Path <i class="ph-bold ph-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Path 3 -->
+            <div class="path-card">
+                <div>
+                    <div class="path-tag" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">Trending</div>
+                    <div class="path-icon-wrapper" style="background: linear-gradient(135deg, #34d399, #10b981); color: white;">
+                        <i class="ph-fill ph-cloud-network"></i>
+                    </div>
+                    <h3>Cloud Infrastructure</h3>
+                    <p>Design, deploy, and scale robust applications on AWS, Google Cloud, and Azure.</p>
+                </div>
+                <div>
+                    <div class="path-stats">
+                        <div class="path-stat-item"><i class="ph ph-stack"></i> 10 Modules</div>
+                        <div class="path-stat-item"><i class="ph ph-clock"></i> 90 Hours</div>
+                    </div>
+                    <button class="btn-start-path" onclick="alert('Enrolled Successfully in Cloud Infrastructure!')">
+                        Start Path <i class="ph-bold ph-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Path 4 -->
+            <div class="path-card">
+                <div>
+                    <div class="path-tag" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">Creative</div>
+                    <div class="path-icon-wrapper" style="background: linear-gradient(135deg, #fbbf24, #f59e0b); color: white;">
+                        <i class="ph-fill ph-pen-nib"></i>
+                    </div>
+                    <h3>UI/UX Design Masterclass</h3>
+                    <p>Master Figma, user research, wireframing, and build stunning user interfaces.</p>
+                </div>
+                <div>
+                    <div class="path-stats">
+                        <div class="path-stat-item"><i class="ph ph-stack"></i> 8 Modules</div>
+                        <div class="path-stat-item"><i class="ph ph-clock"></i> 65 Hours</div>
+                    </div>
+                    <button class="btn-start-path" onclick="alert('Enrolled Successfully in UI/UX Design Masterclass!')">
+                        Start Path <i class="ph-bold ph-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Premium Community Hub View -->
+    <main class="community-section hidden" id="community-view" style="margin-left: 80px; padding: 2rem 5%; min-height: 100vh; background: #f8fafc;">
+        <div class="community-grid">
+            <!-- Left Column: Feed -->
+            <div>
+                <!-- Create Post Box -->
+                <div class="create-post-card">
+                    <img id="community-user-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&backgroundColor=b6e3f4" alt="User">
+                    <input type="text" id="community-post-input" class="create-post-input" placeholder="Share a resource, ask a question, or start a discussion...">
+                    <button class="btn-primary" style="padding: 0.8rem 1.5rem; border-radius: 30px;" onclick="submitCommunityPost()">Post</button>
+                </div>
+
+                <div id="community-feed">
+                    <!-- Posts will be generated by JS -->
+                </div>
+            </div>
+
+            <!-- Right Column: Sidebar -->
+            <div>
+                <!-- Trending Topics -->
+                <div class="sidebar-panel">
+                    <h3><i class="ph-fill ph-trend-up" style="color: #3b82f6;"></i> Trending Topics</h3>
+                    <div class="trending-topic">
+                        <div class="trending-topic-name"><span style="color: #3b82f6;">#</span> SystemDesign</div>
+                        <div class="trending-topic-count">1.2k posts</div>
+                    </div>
+                    <div class="trending-topic">
+                        <div class="trending-topic-name"><span style="color: #10b981;">#</span> ReactJS</div>
+                        <div class="trending-topic-count">856 posts</div>
+                    </div>
+                    <div class="trending-topic">
+                        <div class="trending-topic-name"><span style="color: #f59e0b;">#</span> MachineLearning</div>
+                        <div class="trending-topic-count">642 posts</div>
+                    </div>
+                    <div class="trending-topic">
+                        <div class="trending-topic-name"><span style="color: #8b5cf6;">#</span> CareerAdvice</div>
+                        <div class="trending-topic-count">430 posts</div>
+                    </div>
+                </div>
+
+                <!-- Top Contributors -->
+                <div class="sidebar-panel">
+                    <h3><i class="ph-fill ph-trophy" style="color: #facc15;"></i> Top Contributors</h3>
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-rank gold">1</div>
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Oliver&backgroundColor=fef08a" alt="User">
+                        <div class="leaderboard-info">
+                            <h4>Dr. Emily Chen</h4>
+                            <p>AI Mentor</p>
+                        </div>
+                        <div class="leaderboard-score">14.5k</div>
+                    </div>
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-rank silver">2</div>
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Nala&backgroundColor=e2e8f0" alt="User">
+                        <div class="leaderboard-info">
+                            <h4>Sarah Jenkins</h4>
+                            <p>Frontend Mentor</p>
+                        </div>
+                        <div class="leaderboard-score">12.2k</div>
+                    </div>
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-rank bronze">3</div>
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Lucy&backgroundColor=fed7aa" alt="User">
+                        <div class="leaderboard-info">
+                            <h4>Vikram Das</h4>
+                            <p>Backend Mentor</p>
+                        </div>
+                        <div class="leaderboard-score">9.8k</div>
+                    </div>
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-rank">4</div>
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&backgroundColor=e2e8f0" alt="User">
+                        <div class="leaderboard-info">
+                            <h4>Alex Morgan</h4>
+                            <p>Student</p>
+                        </div>
+                        <div class="leaderboard-score">5.4k</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- AI Ask Doubt View -->
+    <main class="ask-doubt-section hidden" id="ask-doubt-view" style="margin-left: 80px; padding: 4rem 5%; min-height: 100vh; background: radial-gradient(circle at top, #f8fafc 0%, #e2e8f0 100%); display: flex; flex-direction: column; align-items: center; justify-content: flex-start;">
+        
+        <div class="ask-doubt-container" style="width: 100%; max-width: 800px; margin-top: 5vh;">
+            
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <h1 style="font-size: 3rem; font-weight: 800; background: linear-gradient(135deg, #a855f7, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem;">How can I help you learn?</h1>
+                <p style="color: var(--text-secondary); font-size: 1.1rem;">Ask any academic or technical question, and I'll explain it simply.</p>
+            </div>
+
+            <!-- Modern Prompt Box -->
+            <div class="modern-prompt-box">
+                <textarea id="ai-doubt-textarea" class="modern-prompt-textarea" placeholder="Type your doubt here... (e.g., How does React Context work?)"></textarea>
+                
+                <div class="modern-prompt-actions">
+                    <div class="prompt-tools">
+                        <button class="icon-btn tooltip-trigger" onclick="alert('File Upload Mock')">
+                            <i class="ph ph-paperclip"></i>
+                            <span class="tooltip">Attach Image</span>
+                        </button>
+                        <div class="divider"></div>
+                        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">Scope:</span>
+                        <div class="modern-topic-pills" id="doubt-topic-pills" style="flex-wrap: wrap;">
+                            <div class="modern-pill active" onclick="selectDoubtTopic(this, 'React')">React</div>
+                            <div class="modern-pill" onclick="selectDoubtTopic(this, 'Node.js')">Node.js</div>
+                            <div class="modern-pill" onclick="selectDoubtTopic(this, 'Python')">Python</div>
+                            <div class="modern-pill" onclick="selectDoubtTopic(this, 'DSA')">DSA</div>
+                            <div class="modern-pill" onclick="selectDoubtTopic(this, 'System Design')">System Design</div>
+                            <div class="modern-pill" onclick="selectDoubtTopic(this, 'Math')">Math</div>
+                            <div class="modern-pill" onclick="selectDoubtTopic(this, 'Other')">Other</div>
+                        </div>
+                    </div>
+                    <button class="modern-submit-btn" onclick="submitAIDoubt()">
+                        <i class="ph-fill ph-paper-plane-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Response Area (Hidden Initially) -->
+            <div id="ai-doubt-response-area" class="hidden">
+                <!-- Skeleton Loader -->
+                <div id="ai-doubt-skeleton" class="ai-response-card ai-skeleton hidden">
+                    <div class="gemini-header">
+                        <i class="ph-fill ph-magic-wand" style="color: #a855f7;"></i> Gemini is analyzing...
+                    </div>
+                    <div class="ai-skeleton-line"></div>
+                    <div class="ai-skeleton-line"></div>
+                    <div class="ai-skeleton-line"></div>
+                    <div class="ai-skeleton-line"></div>
+                </div>
+
+                <!-- Final Response -->
+                <div id="ai-doubt-final" class="hidden">
+                    <div class="ai-response-card" style="margin-bottom: 1.5rem;">
+                        <div class="gemini-header">
+                            <i class="ph-fill ph-magic-wand" style="color: #a855f7;"></i> Gemini AI
+                        </div>
+                        <div id="ai-doubt-answer-text" class="ai-answer-content">
+                            <!-- Injected by JS -->
+                        </div>
+                        <h4 style="margin: 0 0 1rem 0; font-size: 1.05rem; color: var(--text-primary);">Recommended Tutorial:</h4>
+                        <div id="ai-doubt-video-card" class="video-recommendation" onclick="playVideo('M576WGiDBdQ', 'React Context API Explained')">
+                            <img src="https://img.youtube.com/vi/M576WGiDBdQ/mqdefault.jpg" class="video-thumb" alt="Video">
+                            <div class="video-info">
+                                <h4 id="ai-doubt-video-title">React Context API Explained</h4>
+                                <p>Learn exactly how this works with a visual code walkthrough.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Doubt Modal -->
+    <div class="modal-overlay hidden" id="doubt-modal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.8); backdrop-filter:blur(8px); z-index:2000; display:flex; justify-content:center; align-items:center; opacity:0; transition: opacity 0.3s ease; pointer-events:none;">
+        <div class="glass-panel" style="width: 90%; max-width: 500px; padding: 2.5rem; position: relative; background: var(--bg-surface-elevated); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
+            <i class="ph ph-x" style="position:absolute; top:1.5rem; right:1.5rem; font-size:1.5rem; cursor:pointer; color:var(--text-secondary);" onclick="closeDoubtModal()"></i>
+            
+            <div style="display:flex; align-items:center; gap:1rem; margin-bottom: 1.5rem;">
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--accent-primary); display: flex; justify-content: center; align-items: center; color: white; font-size: 1.5rem;">
+                    <i class="ph-fill ph-robot"></i>
+                </div>
+                <h2 style="margin:0; font-size:1.25rem; color:var(--text-primary);">VidyaSetu AI Assistant</h2>
+            </div>
+            
+            <!-- Step 1: Intake Form -->
+            <div id="doubt-step-1">
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Hello! I'm here to help you connect with a mentor. To ensure a productive session, please briefly describe your doubt.</p>
+                <div class="form-group">
+                    <label>Which topic are you struggling with?</label>
+                    <input type="text" id="doubt-topic" class="modern-input" placeholder="e.g. Binary Search Trees" required>
+                </div>
+                <div class="form-group mt-3">
+                    <label>What exactly is confusing you?</label>
+                    <textarea id="doubt-details" class="modern-input" placeholder="e.g. I don't understand how to balance the tree when inserting a new node..." rows="3" required></textarea>
+                </div>
+                <button class="btn-primary block mt-4" onclick="generateDoubtSummary()">Generate Brief & Find Mentor <i class="ph ph-arrow-right"></i></button>
+            </div>
+
+            <!-- Step 2: Loading Processing -->
+            <div id="doubt-step-2" class="hidden" style="text-align: center; padding: 2rem 0;">
+                <div class="ai-spinner small-spinner" style="margin: 0 auto 1.5rem auto;">
+                    <div class="spinner-ring"></div>
+                </div>
+                <p style="color: var(--text-primary); font-weight: 500; font-size: 1.1rem;">Analyzing your doubt...</p>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">Formulating a concise brief for your mentor.</p>
+            </div>
+
+            <!-- Step 3: Summary Review -->
+            <div id="doubt-step-3" class="hidden">
+                <p style="color: var(--text-secondary); margin-bottom: 1rem;">Here is the brief I've prepared for your mentor. You're ready to connect!</p>
+                <div style="background: rgba(15, 23, 42, 0.05); border: 1px solid var(--border-color); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                    <h3 style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;">Doubt Brief</h3>
+                    <div id="doubt-summary-content" style="color: var(--text-primary); font-size: 0.95rem; line-height: 1.5;"></div>
+                </div>
+                <button class="btn-primary block" onclick="findMentor()">Find a Mentor Now <i class="ph ph-video-camera"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mentor Search Overlay -->
+    <div class="modal-overlay hidden" id="mentor-search-overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.95); backdrop-filter:blur(10px); z-index:3000; display:flex; flex-direction:column; justify-content:center; align-items:center; opacity:0; transition: opacity 0.5s ease; pointer-events:none;">
+        <div class="ai-spinner" style="margin-bottom: 2rem;">
+            <div class="spinner-ring" style="border-width: 4px; width: 80px; height: 80px;"></div>
+        </div>
+        <h2 id="search-overlay-text" style="color: white; font-size: 1.5rem; font-weight: 500; text-align: center; max-width: 600px; margin: 0; min-height: 2.5rem; transition: all 0.3s ease;">Scanning 300+ Mentors...</h2>
+    </div>
+
     <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
     <script src="app.js"></script>
 </body>
 </html>
